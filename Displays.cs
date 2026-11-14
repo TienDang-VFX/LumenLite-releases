@@ -163,7 +163,7 @@ internal static class Displays
         };
         return DisplayConfigGetDeviceInfo(ref info) == 0 && !string.IsNullOrWhiteSpace(info.monitorFriendlyDeviceName)
             ? info.monitorFriendlyDeviceName
-            : "Màn hình";
+            : L.T("Màn hình");
     }
 
     /// <summary>Friendly monitor names of the active displays, keyed by GDI name such as \.\DISPLAY1.</summary>

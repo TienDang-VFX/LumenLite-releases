@@ -71,17 +71,17 @@ public sealed partial class IslandWindow
             header.Children.Add(_back);
         }
 
-        GridTile("", "RustDesk", "Đổi máy", () => ShowView(ViewRemote));
-        GridTile("", "Âm lượng", "Từng app", () => OpenPanel?.Invoke("sound"));
-        GridTile("", "Đang phát", null, () => ShowView(""));
-        GridTile("", "Ghi chú", null, () => OpenNotes?.Invoke());
-        GridTile("", "Tải về", null, () => CommandBar.Launch(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads")));
-        GridTile("", "Hệ thống", null, () => OpenPanel?.Invoke("system"));
-        GridTile("", "Tiện ích", null, () => OpenPanel?.Invoke("tools"));
-        GridTile("", "Lịch", null, () => ShowView(ViewCalendar));
+        GridTile("", "RustDesk", L.T("Đổi máy"), () => ShowView(ViewRemote));
+        GridTile("", L.T("Âm lượng"), L.T("Từng app"), () => OpenPanel?.Invoke("sound"));
+        GridTile("", L.T("Đang phát"), null, () => ShowView(""));
+        GridTile("", L.T("Ghi chú"), null, () => OpenNotes?.Invoke());
+        GridTile("", L.T("Tải về"), null, () => CommandBar.Launch(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads")));
+        GridTile("", L.T("Hệ thống"), null, () => OpenPanel?.Invoke("system"));
+        GridTile("", L.T("Tiện ích"), null, () => OpenPanel?.Invoke("tools"));
+        GridTile("", L.T("Lịch"), null, () => ShowView(ViewCalendar));
         GridTile("", "Command Bar", null, () => OpenCommandBar?.Invoke());
-        GridTile("", "Menu vòng tròn", null, () => OpenRadial?.Invoke());
-        GridTile("", "Thiết bị", null, () => OpenPanel?.Invoke("devices"));
+        GridTile("", L.T("Menu vòng tròn"), null, () => OpenRadial?.Invoke());
+        GridTile("", L.T("Thiết bị"), null, () => OpenPanel?.Invoke("devices"));
         GridTile("✦", "AI Agents", null, () => ShowView(ViewAgents), symbol: true);
         Grid.SetRow(_tools, 1);
         _expanded.Children.Add(_tools);
@@ -118,11 +118,11 @@ public sealed partial class IslandWindow
         var main = _view == "";
         _heading.Text = (_view switch
         {
-            ViewCalendar => "Lịch",
-            ViewTools => "Tiện ích",
+            ViewCalendar => L.T("Lịch"),
+            ViewTools => L.T("Tiện ích"),
             ViewAgents => "AI Agents",
             ViewRemote => "RustDesk",
-            _ => _hasMedia ? "Đang phát" : "Điều khiển",
+            _ => _hasMedia ? L.T("Đang phát") : L.T("Điều khiển"),
         }).ToUpperInvariant();
         _heading.Margin = new Thickness(main ? 0 : 22, 0, 0, 0);
         if (_back != null) _back.Visibility = main ? Visibility.Collapsed : Visibility.Visible;
@@ -201,7 +201,7 @@ public sealed partial class IslandWindow
             BorderThickness = new Thickness(1),
             Child = row,
             Cursor = Cursors.Hand,
-            ToolTip = $"RustDesk · {peer.Id}" + (peer.User.Length > 0 ? $" · {peer.User}" : "") + " · bấm để mở, bấm lần nữa để thu nhỏ",
+            ToolTip = $"RustDesk · {peer.Id}" + (peer.User.Length > 0 ? $" · {peer.User}" : "") + L.T(" · bấm để mở, bấm lần nữa để thu nhỏ"),
         };
         pill.MouseEnter += (_, _) => pill.Background = TileHover;
         pill.MouseLeave += (_, _) => pill.Background = TileBrush;
@@ -241,7 +241,7 @@ public sealed partial class IslandWindow
         if (!RustDesk.Available)
         {
             _remoteCount = 1;
-            _remote.Children.Add(Card(new TextBlock { Text = "Chưa thấy RustDesk trên máy này.", FontSize = 13, Foreground = Material.Display.Secondary }));
+            _remote.Children.Add(Card(new TextBlock { Text = L.T("Chưa thấy RustDesk trên máy này."), FontSize = 13, Foreground = Material.Display.Secondary }));
             return;
         }
         var peers = RustDesk.List().Take(5).ToList();
@@ -267,7 +267,7 @@ public sealed partial class IslandWindow
                 CornerRadius = new CornerRadius(Material.Display.KeyRadius),
                 Padding = new Thickness(9, 3, 9, 4),
                 Background = peer.Showing ? Material.Display.AccentSoft : TrackBrush,
-                Child = new TextBlock { Text = peer.Showing ? "Đang xem" : "Chuyển", FontSize = 12, FontWeight = FontWeights.SemiBold, Foreground = peer.Showing ? Material.Display.Accent : Material.Display.Text },
+                Child = new TextBlock { Text = peer.Showing ? L.T("Đang xem") : L.T("Chuyển"), FontSize = 12, FontWeight = FontWeights.SemiBold, Foreground = peer.Showing ? Material.Display.Accent : Material.Display.Text },
                 VerticalAlignment = VerticalAlignment.Center,
             };
             Grid.SetColumn(state, 2);
@@ -303,9 +303,9 @@ public sealed partial class IslandWindow
         if (peers.Count == 0)
         {
             _remoteCount = 1;
-            _remote.Children.Add(Card(new TextBlock { Text = "RustDesk chưa lưu máy nào.", FontSize = 13, Foreground = Material.Display.Secondary }));
+            _remote.Children.Add(Card(new TextBlock { Text = L.T("RustDesk chưa lưu máy nào."), FontSize = 13, Foreground = Material.Display.Secondary }));
         }
-        var open = Material.Display.Pressable(new TextBlock { Text = "Mở RustDesk  ›", FontSize = 12.5, Foreground = Material.Display.Accent }, RustDesk.OpenApp, new Thickness(8, 2, 8, 4));
+        var open = Material.Display.Pressable(new TextBlock { Text = L.T("Mở RustDesk  ›"), FontSize = 12.5, Foreground = Material.Display.Accent }, RustDesk.OpenApp, new Thickness(8, 2, 8, 4));
         open.HorizontalAlignment = HorizontalAlignment.Center;
         _remote.Children.Add(open);
     }

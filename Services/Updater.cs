@@ -81,18 +81,18 @@ internal static class Updater
     {
         if (!Enabled)
         {
-            Set(State.Failed, "Bản tự build: tự cập nhật đã tắt.");
+            Set(State.Failed, L.T("Bản tự build: tự cập nhật đã tắt."));
             return;
         }
         if (Status == State.Ready || System.Threading.Interlocked.Exchange(ref _busy, 1) == 1)
             return;
         try
         {
-            Set(State.Checking, "Đang kiểm tra…");
+            Set(State.Checking, L.T("Đang kiểm tra…"));
             using var response = await Http.GetAsync($"https://api.github.com/repos/{Repository}/releases/latest");
             if (!response.IsSuccessStatusCode)
             {
-                Set(State.Failed, response.StatusCode == System.Net.HttpStatusCode.NotFound ? "Chưa có bản phát hành nào." : $"GitHub trả lời {(int)response.StatusCode}.");
+                Set(State.Failed, response.StatusCode == System.Net.HttpStatusCode.NotFound ? L.T("Chưa có bản phát hành nào.") : L.F($"GitHub trả lời {(int)response.StatusCode}."));
                 return;
             }
             using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
@@ -100,7 +100,7 @@ internal static class Updater
             LastCheck = DateTime.Now;
             if (!TryVersion(root.GetProperty("tag_name").GetString(), out var latest) || latest <= Current)
             {
-                Set(State.UpToDate, $"Đang dùng bản mới nhất ({CurrentText}).");
+                Set(State.UpToDate, L.F($"Đang dùng bản mới nhất ({CurrentText})."));
                 return;
             }
             JsonElement? asset = null;
@@ -109,17 +109,17 @@ internal static class Updater
                     asset = a;
             if (asset is not { } found)
             {
-                Set(State.Failed, $"Bản {Text(latest)} chưa có file {AssetName}.");
+                Set(State.Failed, L.F($"Bản {Text(latest)} chưa có file {AssetName}."));
                 return;
             }
             Pending = latest;
-            Set(State.Downloading, $"Đang tải bản {Text(latest)}…");
+            Set(State.Downloading, L.F($"Đang tải bản {Text(latest)}…"));
             await InstallAsync(found, latest);
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or IOException or UnauthorizedAccessException or System.Collections.Generic.KeyNotFoundException or InvalidOperationException)
         {
             Store.Log("update failed: " + ex.Message);
-            Set(State.Failed, "Không cập nhật được: " + ex.Message);
+            Set(State.Failed, L.T("Không cập nhật được: ") + ex.Message);
         }
         finally
         {
@@ -129,19 +129,19 @@ internal static class Updater
 
     private static async Task InstallAsync(JsonElement asset, Version latest)
     {
-        var exe = Environment.ProcessPath ?? throw new InvalidOperationException("Không biết file LumenLite đang chạy.");
+        var exe = Environment.ProcessPath ?? throw new InvalidOperationException(L.T("Không biết file LumenLite đang chạy."));
         var download = exe + ".download";
         var size = asset.GetProperty("size").GetInt64();
         await using (var source = await Http.GetStreamAsync(asset.GetProperty("browser_download_url").GetString()))
         await using (var target = File.Create(download))
             await source.CopyToAsync(target);
         if (new FileInfo(download).Length != size)
-            throw new IOException("file tải về không đủ dung lượng");
+            throw new IOException(L.T("file tải về không đủ dung lượng"));
         // GitHub states the file's SHA-256: a release without one, or a file that does not match, is not used.
         if (!asset.TryGetProperty("digest", out var digest) || digest.GetString() is not { } d || !d.StartsWith("sha256:", StringComparison.OrdinalIgnoreCase))
         {
             File.Delete(download);
-            throw new IOException("bản phát hành không có mã kiểm tra SHA-256");
+            throw new IOException(L.T("bản phát hành không có mã kiểm tra SHA-256"));
         }
         await using (var check = File.OpenRead(download))
         {
@@ -150,7 +150,7 @@ internal static class Updater
             {
                 check.Dispose();
                 File.Delete(download);
-                throw new IOException("file tải về không khớp mã kiểm tra của GitHub");
+                throw new IOException(L.T("file tải về không khớp mã kiểm tra của GitHub"));
             }
         }
         // The file must be a program that says it is the version the release names.
@@ -159,7 +159,7 @@ internal static class Updater
             || !string.Equals(info.ProductName, "LumenLite", StringComparison.OrdinalIgnoreCase))
         {
             File.Delete(download);
-            throw new IOException($"file tải về không phải LumenLite {Text(latest)}");
+            throw new IOException(L.F($"file tải về không phải LumenLite {Text(latest)}"));
         }
         // The running file can be renamed but not overwritten: it steps aside, the new one takes its name.
         var old = exe + ".old";
@@ -174,7 +174,7 @@ internal static class Updater
             File.Move(old, exe);
             throw;
         }
-        Set(State.Ready, $"Đã tải bản {Text(latest)}. Khởi động lại LumenLite để dùng.");
+        Set(State.Ready, L.F($"Đã tải bản {Text(latest)}. Khởi động lại LumenLite để dùng."));
         _dispatcher?.BeginInvoke(() => Ready?.Invoke(latest));
     }
 

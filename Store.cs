@@ -17,8 +17,43 @@ public sealed class WidgetState
 
 public sealed class ScratchPad
 {
-    public string Title { get; set; } = "Ghi chú";
+    /// <summary>A short stable name for the note, shared by every PC that syncs it (its file is notes/&lt;Id&gt;.md).</summary>
+    public string Id { get; set; } = "";
+    /// <summary>The Git blob of the note as last synced with GitHub; null for a note that was never synced.</summary>
+    public string? SyncedSha { get; set; }
+    public string Title { get; set; } = L.T("Ghi chú");
     public string Text { get; set; } = "";
+    /// <summary>Shown as a sticky note on the desktop.</summary>
+    public bool OnDesktop { get; set; }
+    /// <summary>A pinned sticky note stays where it is and floats above other windows.</summary>
+    public bool Pinned { get; set; }
+    public string Color { get; set; } = "yellow";
+    public double? Left { get; set; }
+    public double? Top { get; set; }
+    public double? Width { get; set; }
+    public double? Height { get; set; }
+}
+
+/// <summary>A synced note deleted on this PC, still to be removed from GitHub.</summary>
+public sealed class NoteTombstone
+{
+    public string Id { get; set; } = "";
+    public string Sha { get; set; } = "";
+}
+
+/// <summary>Where the Scratchpad notes sync to. The token is kept apart, encrypted (see NotesSync).</summary>
+public sealed class NotesSyncSettings
+{
+    public bool Enabled { get; set; }
+    /// <summary>"owner/name" of a (private) GitHub repository.</summary>
+    public string Repo { get; set; } = "";
+    public string Branch { get; set; } = "main";
+    public string Folder { get; set; } = "notes";
+    /// <summary>"stored": a token saved (encrypted) on this PC; "gh": the GitHub CLI's sign-in, asked each time.</summary>
+    public string TokenSource { get; set; } = "stored";
+    public DateTime? LastSync { get; set; }
+    public string? LastCommit { get; set; }
+    public List<NoteTombstone> Tombstones { get; set; } = new();
 }
 
 public sealed class LaunchItem
@@ -56,6 +91,8 @@ public sealed class AppSettings
     public bool SoftwareRendering { get; set; }
     /// <summary>The panel's look: "system" (follow Windows), "light" or "dark".</summary>
     public string ThemeMode { get; set; } = "system";
+    /// <summary>The interface language: "vi" or "en". Applies from the next start.</summary>
+    public string Language { get; set; } = "vi";
     /// <summary>
     /// A session-fleet machine name to the RustDesk ID that shows its screen, for machines whose session
     /// records do not name their computer yet (plugin older than 0.3.1), or whose RustDesk name differs.
@@ -68,6 +105,7 @@ public sealed class AppSettings
     public bool RadialMigratedRustDesk { get; set; }
     public DateTime CleanerLastRun { get; set; }
     public List<ScratchPad> Pads { get; set; } = new();
+    public NotesSyncSettings NotesSync { get; set; } = new();
     public bool CleanLinks { get; set; } = true;
     public bool DownloadAlerts { get; set; } = true;
     public string Notes { get; set; } = "";

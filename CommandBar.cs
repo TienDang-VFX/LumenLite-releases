@@ -58,7 +58,7 @@ internal sealed class CommandBar : Window
         var style = Native.GetWindowLongPtr(hwnd, Native.GWL_EXSTYLE).ToInt64();
         Native.SetWindowLongPtr(hwnd, Native.GWL_EXSTYLE, new IntPtr((style | Native.WS_EX_TOOLWINDOW) & ~Native.WS_EX_APPWINDOW));
 
-        var (box, input) = Ui.Search("Tìm app, lệnh, phép tính, đổi đơn vị, emoji…", 18, bare: true);
+        var (box, input) = Ui.Search(L.T("Tìm app, lệnh, phép tính, đổi đơn vị, emoji…"), 18, bare: true);
         _input = input;
 
         var stack = new StackPanel();
@@ -68,7 +68,7 @@ internal sealed class CommandBar : Window
         results.Margin = new Thickness(8, 8, 8, 0);
         stack.Children.Add(results);
         _hint.Margin = new Thickness(16, 6, 16, 10);
-        _hint.Text = "↑↓ chọn · Enter mở · Esc đóng";
+        _hint.Text = L.T("↑↓ chọn · Enter mở · Esc đóng");
         stack.Children.Add(_hint);
 
         Content = m.Frame(stack);
@@ -175,12 +175,12 @@ internal sealed class CommandBar : Window
             items.AddRange(Convert(query));
             items.AddRange(Emoji(query));
             items.AddRange(Match(_commands(), query));
-            items.AddRange(_apps.Select(a => Scored(new CommandItem(a.Name, "Ứng dụng", "App", "", () => Launch(a.Launch), a.Launch), query)).Where(i => i.Score > 0));
-            items.AddRange(_recent.Select(r => Scored(new CommandItem(r.Name, r.Path, "File gần đây", "", () => Launch(r.Path), r.Path), query)).Where(i => i.Score > 0).Select(i => i with { Score = i.Score - 15 }));
+            items.AddRange(_apps.Select(a => Scored(new CommandItem(a.Name, L.T("Ứng dụng"), "App", "", () => Launch(a.Launch), a.Launch), query)).Where(i => i.Score > 0));
+            items.AddRange(_recent.Select(r => Scored(new CommandItem(r.Name, r.Path, L.T("File gần đây"), "", () => Launch(r.Path), r.Path), query)).Where(i => i.Score > 0).Select(i => i with { Score = i.Score - 15 }));
             if (Directory.Exists(query) || File.Exists(query))
-                items.Add(new CommandItem(query, "Mở đường dẫn này", "Đường dẫn", "", () => Launch(query), Score: 95));
+                items.Add(new CommandItem(query, L.T("Mở đường dẫn này"), L.T("Đường dẫn"), "", () => Launch(query), Score: 95));
             items = items.OrderByDescending(i => i.Score).Take(9).ToList();
-            items.Add(new CommandItem($"Tìm \"{query}\" trên Google", "Mở trình duyệt", "Web", "",
+            items.Add(new CommandItem(L.F($"Tìm \"{query}\" trên Google"), L.T("Mở trình duyệt"), "Web", "",
                 () => Launch("https://www.google.com/search?q=" + Uri.EscapeDataString(query))));
         }
         else
@@ -205,7 +205,7 @@ internal sealed class CommandBar : Window
             : name.Contains(q) ? 60
             : Initials(name).StartsWith(q) && q.Length >= 2 ? 55
             : keys.Contains(q) ? 40 : 0;
-        if (score > 0 && item.Kind == "Lệnh") score += 3;
+        if (score > 0 && item.Kind == L.T("Lệnh")) score += 3;
         return item with { Score = score };
     }
 
@@ -279,7 +279,7 @@ internal sealed class CommandBar : Window
             yield break;
         var text = Math.Abs(value) >= 1e15 ? value.ToString("E6", CultureInfo.InvariantCulture) : Math.Round(value, 10).ToString("#,0.##########", CultureInfo.GetCultureInfo("vi-VN"));
         var plain = Math.Round(value, 10).ToString(CultureInfo.InvariantCulture);
-        yield return new CommandItem("= " + text, "Enter để copy kết quả", "Máy tính", "", () => CopyText(plain), Score: 100);
+        yield return new CommandItem("= " + text, L.T("Enter để copy kết quả"), L.T("Máy tính"), "", () => CopyText(plain), Score: 100);
     }
 
     /// <summary>A small arithmetic parser: + - * / ^ %, brackets; "," works as a decimal point.</summary>
@@ -382,7 +382,7 @@ internal sealed class CommandBar : Window
             if (unit.Group != from.Group) continue;
             var value = from.Group == "temp" ? Temperature(amount, from.Label, unit.Label) : amount * from.Factor / unit.Factor;
             var text = $"{value.ToString(Math.Abs(value) >= 100 ? "#,0.##" : "0.####", CultureInfo.GetCultureInfo("vi-VN"))} {unit.Label}";
-            yield return new CommandItem($"{m.Groups[1].Value} {from.Label} = {text}", "Enter để copy", "Đổi đơn vị", "",
+            yield return new CommandItem($"{m.Groups[1].Value} {from.Label} = {text}", L.T("Enter để copy"), L.T("Đổi đơn vị"), "",
                 () => CopyText(value.ToString(CultureInfo.InvariantCulture)), Score: 98);
         }
     }
@@ -423,7 +423,7 @@ internal sealed class CommandBar : Window
         {
             if (!keys.Split(' ').Any(k => k.StartsWith(q)))
                 continue;
-            yield return new CommandItem(emoji + "  " + keys.Split(' ')[0], "Enter để copy emoji", "Emoji", emoji, () => CopyText(emoji), Score: query.StartsWith(':') ? 97 : 30);
+            yield return new CommandItem(emoji + "  " + keys.Split(' ')[0], L.T("Enter để copy emoji"), "Emoji", emoji, () => CopyText(emoji), Score: query.StartsWith(':') ? 97 : 30);
             if (++count == 4) yield break;
         }
     }

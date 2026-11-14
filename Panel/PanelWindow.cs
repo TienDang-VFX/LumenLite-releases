@@ -272,8 +272,8 @@ internal sealed class PanelWindow : Window
         _subHeader.Children.Add(Ui.Icon("\uE72B", Back, size: 13));
         _subHeader.Children.Add(_subTitle);
         var actions = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 0, -5, 0) };
-        actions.Children.Add(Ui.Icon("\uE713", () => OpenSettings?.Invoke(), "Cài đặt", color: _m.Secondary));
-        actions.Children.Add(Ui.Icon("\uE7E8", () => Confirm("Thoát LumenLite?", "Mọi widget, Dynamic Island và phím tắt sẽ tắt cho tới lần mở sau.", "Thoát", () => Quit?.Invoke()), "Thoát", color: _m.Secondary));
+        actions.Children.Add(Ui.Icon("\uE713", () => OpenSettings?.Invoke(), L.T("Cài đặt"), color: _m.Secondary));
+        actions.Children.Add(Ui.Icon("\uE7E8", () => Confirm(L.T("Thoát LumenLite?"), L.T("Mọi widget, Dynamic Island và phím tắt sẽ tắt cho tới lần mở sau."), L.T("Thoát"), () => Quit?.Invoke()), L.T("Thoát"), color: _m.Secondary));
         var header = new Grid { Height = 30, Margin = new Thickness(0, 0, 0, 4) };
         header.Children.Add(_wordmark);
         header.Children.Add(_subHeader);
@@ -458,7 +458,7 @@ internal sealed class PanelWindow : Window
             _overlay.Visibility = Visibility.Collapsed;
             onConfirm();
         }, destructive ? Tone.Destructive : Tone.Primary, wide: true);
-        var buttons = Ui.Bar(Ui.Action("Hủy", () => _overlay.Visibility = Visibility.Collapsed, wide: true), ok);
+        var buttons = Ui.Bar(Ui.Action(L.T("Hủy"), () => _overlay.Visibility = Visibility.Collapsed, wide: true), ok);
         buttons.Margin = new Thickness(0);
         stack.Children.Add(buttons);
         _overlay.Children.Add(new Border

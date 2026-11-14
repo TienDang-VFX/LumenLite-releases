@@ -51,7 +51,7 @@ public sealed partial class IslandWindow : Window
     private readonly Border _miniCover = Cover(22, 4);
     private readonly TextBlock _miniTitle = new() { FontSize = 12.5, FontWeight = FontWeights.SemiBold, TextTrimming = TextTrimming.CharacterEllipsis, VerticalAlignment = VerticalAlignment.Center };
     private readonly StackPanel _bars = new() { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center, Height = 14, Margin = new Thickness(10, 0, 0, 0) };
-    private readonly TextBlock _miniAgent = new() { FontSize = 12.5, FontWeight = FontWeights.SemiBold, Foreground = Material.Display.Accent, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(10, 0, 0, 0), ToolTip = "Claude Code đang làm việc" };
+    private readonly TextBlock _miniAgent = new() { FontSize = 12.5, FontWeight = FontWeights.SemiBold, Foreground = Material.Display.Accent, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(10, 0, 0, 0), ToolTip = L.T("Claude Code đang làm việc") };
 
     // Expanded: header
     private readonly TextBlock _heading = new() { FontFamily = Theme.Mono, FontSize = 10.5, Foreground = Material.Display.Secondary, VerticalAlignment = VerticalAlignment.Center };
@@ -158,10 +158,10 @@ public sealed partial class IslandWindow : Window
         _playGlyph.Foreground = Material.Display.Fill;
         _next = Material.Display.Pressable(Material.Display.Glyph("", 18), () => Send(s => s.TrySkipNextAsync()), new Thickness(10, 6, 10, 6));
 
-        _tileMixer = new Tile(Material.Display, "", "Âm thanh", () => OpenPanel?.Invoke("sound"));
-        _tileSnip = new Tile(Material.Display, "", "Ghi chú", () => OpenNotes?.Invoke());
-        _tileShutdown = ConfirmTile("", "Tắt máy", "Bấm lần nữa để tắt", "/s");
-        _tileRestart = ConfirmTile("", "Khởi động lại", "Bấm lần nữa để khởi động lại", "/r");
+        _tileMixer = new Tile(Material.Display, "", L.T("Âm thanh"), () => OpenPanel?.Invoke("sound"));
+        _tileSnip = new Tile(Material.Display, "", L.T("Ghi chú"), () => OpenNotes?.Invoke());
+        _tileShutdown = ConfirmTile("", L.T("Tắt máy"), L.T("Bấm lần nữa để tắt"), "/s");
+        _tileRestart = ConfirmTile("", L.T("Khởi động lại"), L.T("Bấm lần nữa để khởi động lại"), "/r");
 
         BuildCompact();
         BuildExpanded();
@@ -171,11 +171,13 @@ public sealed partial class IslandWindow : Window
         BuildViews();
         SystemMonitor.Sampled += _ => UpdateIdleText();
 
-        _leftButtons.Children.Add(SideButton("", "Tiện ích", () => ShowView(_view == ViewTools ? "" : ViewTools)));
-        _rightButtons.Children.Add(SideButton("", "Mixer âm lượng", () => OpenPanel?.Invoke("sound")));
+        _leftButtons.Children.Add(SideButton("", L.T("Tiện ích"), () => ShowView(_view == ViewTools ? "" : ViewTools)));
+        _rightButtons.Children.Add(SideButton("", L.T("Mixer âm lượng"), () => OpenPanel?.Invoke("sound")));
         _rightButtons.Children.Add(_sideAgents = SideButton("✦", "AI Agents", () => ShowView(ViewAgents)));
 
-        _leftButtons.Children.Add(SideButton("\uE787", "Lịch tháng", () => ShowView(IsCalendar ? "" : ViewCalendar)));
+        _leftButtons.Children.Add(SideButton("\uE787", L.T("Lịch tháng"), () => ShowView(IsCalendar ? "" : ViewCalendar)));
+        _leftButtons.Children.Add(SideButton("", L.T("Ghi chú"), () => OpenNotes?.Invoke()));
+        _rightButtons.Children.Add(SideButton("", "Command Bar", () => OpenCommandBar?.Invoke()));
 
         var content = new Grid();
         content.Children.Add(_compact);
@@ -645,7 +647,7 @@ public sealed partial class IslandWindow : Window
         outputRow.Children.Add(outputGlyph);
         outputRow.Children.Add(_outputName);
         var output = Material.Display.Pressable(outputRow, NextOutput, new Thickness(8, 5, 8, 5));
-        output.ToolTip = "Bấm để chuyển loa/tai nghe";
+        output.ToolTip = L.T("Bấm để chuyển loa/tai nghe");
         output.Margin = new Thickness(8, 0, -8, 0);
         Grid.SetColumn(output, 1);
         bottom.Children.Add(output);
@@ -670,8 +672,8 @@ public sealed partial class IslandWindow : Window
         note.Margin = new Thickness(0, 0, 12, 0);
         idleCard.Children.Add(note);
         var idleText = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
-        idleText.Children.Add(new TextBlock { Text = "Không có nhạc đang phát", FontSize = 13, FontWeight = FontWeights.SemiBold, TextTrimming = TextTrimming.CharacterEllipsis });
-        idleText.Children.Add(new TextBlock { Text = "Mở Spotify, YouTube… để điều khiển ở đây", FontSize = 11, Foreground = Material.Display.Secondary, TextTrimming = TextTrimming.CharacterEllipsis });
+        idleText.Children.Add(new TextBlock { Text = L.T("Không có nhạc đang phát"), FontSize = 13, FontWeight = FontWeights.SemiBold, TextTrimming = TextTrimming.CharacterEllipsis });
+        idleText.Children.Add(new TextBlock { Text = L.T("Mở Spotify, YouTube… để điều khiển ở đây"), FontSize = 11, Foreground = Material.Display.Secondary, TextTrimming = TextTrimming.CharacterEllipsis });
         Grid.SetColumn(idleText, 1);
         idleCard.Children.Add(idleText);
         var card = new Border { Background = CardBrush, BorderBrush = RimBrush, BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(Material.Display.GroupRadius), Padding = new Thickness(11), Child = idleCard, Margin = new Thickness(0, 0, 12, 0) };
@@ -725,7 +727,7 @@ public sealed partial class IslandWindow : Window
         header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         header.Children.Add(_calendarTitle);
         var prev = Material.Display.Pressable(Material.Display.Glyph("\uE76B", 11), () => { _month = _month.AddMonths(-1); DrawCalendar(); }, new Thickness(8, 4, 8, 4));
-        var today = Material.Display.Pressable(new TextBlock { Text = "Hôm nay", FontSize = 11.5, Foreground = Material.Display.Secondary }, () => { _month = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1); DrawCalendar(); }, new Thickness(8, 4, 8, 4));
+        var today = Material.Display.Pressable(new TextBlock { Text = L.T("Hôm nay"), FontSize = 11.5, Foreground = Material.Display.Secondary }, () => { _month = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1); DrawCalendar(); }, new Thickness(8, 4, 8, 4));
         var next = Material.Display.Pressable(Material.Display.Glyph("\uE76C", 11), () => { _month = _month.AddMonths(1); DrawCalendar(); }, new Thickness(8, 4, 8, 4));
         Grid.SetColumn(prev, 1);
         Grid.SetColumn(today, 2);
@@ -735,7 +737,7 @@ public sealed partial class IslandWindow : Window
         header.Children.Add(next);
         _calendar.Children.Add(header);
         var names = new UniformGrid { Columns = 7 };
-        foreach (var name in new[] { "T2", "T3", "T4", "T5", "T6", "T7", "CN" })
+        foreach (var name in L.English ? new[] { "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su" } : new[] { "T2", "T3", "T4", "T5", "T6", "T7", "CN" })
             names.Children.Add(new TextBlock { Text = name, FontFamily = Theme.Mono, FontSize = 10, Foreground = Material.Display.Secondary, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 0, 0, 4) });
         Grid.SetRow(names, 1);
         _calendar.Children.Add(names);
@@ -748,7 +750,7 @@ public sealed partial class IslandWindow : Window
 
     private void DrawCalendar()
     {
-        var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+        var culture = System.Globalization.CultureInfo.GetCultureInfo(L.English ? "en-US" : "vi-VN");
         var title = _month.ToString("MMMM yyyy", culture);
         _calendarTitle.Text = char.ToUpper(title[0], culture) + title[1..];
         _days.Children.Clear();
@@ -1059,7 +1061,7 @@ public sealed partial class IslandWindow : Window
 
     private void UpdateTiles()
     {
-        _tileMixer.Set(false, "Từng app");
+        _tileMixer.Set(false, L.T("Từng app"));
         _tileSnip.Set(false, "Scratchpad");
         if (_armed == null)
         {
@@ -1086,7 +1088,7 @@ public sealed partial class IslandWindow : Window
         try
         {
             var current = Audio.DefaultId();
-            _outputName.Text = Audio.Outputs().FirstOrDefault(o => o.Id == current)?.Name ?? "Không có loa";
+            _outputName.Text = Audio.Outputs().FirstOrDefault(o => o.Id == current)?.Name ?? L.T("Không có loa");
         }
         catch (Exception ex)
         {
@@ -1099,7 +1101,7 @@ public sealed partial class IslandWindow : Window
                 _brightnessKeys.Clear();
                 _brightnessKeys.AddRange(monitors.Select(m => m.Key));
                 _brightness.Show(monitors.Count == 0 ? null : (monitors.Average(m => m.Level), false));
-                _brightness.ToolTip = monitors.Count == 0 ? "Màn hình không hỗ trợ DDC/CI" : "Độ sáng mọi màn hình: " + string.Join(", ", monitors.Select(m => m.Name));
+                _brightness.ToolTip = monitors.Count == 0 ? L.T("Màn hình không hỗ trợ DDC/CI") : L.T("Độ sáng mọi màn hình: ") + string.Join(", ", monitors.Select(m => m.Name));
             }));
         }
     }
@@ -1163,7 +1165,7 @@ public sealed partial class IslandWindow : Window
     {
         try
         {
-            _outputName.Text = Audio.NextOutput() ?? "Không có loa";
+            _outputName.Text = Audio.NextOutput() ?? L.T("Không có loa");
         }
         catch (Exception ex)
         {
@@ -1218,7 +1220,7 @@ public sealed partial class IslandWindow : Window
         _levelFill.Tag = (double)shown;
         if (_levelFill.Parent is FrameworkElement track)
             _levelFill.Width = track.ActualWidth * shown;
-        _levelText.Text = muted ? "Tắt" : $"{Math.Round(level * 100)}%";
+        _levelText.Text = muted ? L.T("Tắt") : $"{Math.Round(level * 100)}%";
         SetMode(Mode.Level);
         _transient.Stop();
         _transient.Interval = TimeSpan.FromSeconds(1.6);
@@ -1336,7 +1338,7 @@ public sealed partial class IslandWindow : Window
             var props = await session.TryGetMediaPropertiesAsync();
             if (session != _session)
                 return;
-            _title.Text = _miniTitle.Text = string.IsNullOrWhiteSpace(props.Title) ? "Không rõ tên bài" : props.Title;
+            _title.Text = _miniTitle.Text = string.IsNullOrWhiteSpace(props.Title) ? L.T("Không rõ tên bài") : props.Title;
             _artist.Text = string.IsNullOrWhiteSpace(props.Artist) ? MediaInfo.AppName(session) : props.Artist;
             var image = props.Thumbnail == null ? null : await MediaInfo.LoadThumbnailAsync(props.Thumbnail);
             foreach (var cover in new[] { _cover, _miniCover })

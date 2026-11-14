@@ -132,10 +132,10 @@ public sealed partial class IslandWindow
     private static string Ago(DateTime when)
     {
         var span = DateTime.Now - when;
-        if (span < TimeSpan.FromMinutes(1)) return "vừa xong";
-        if (span < TimeSpan.FromHours(1)) return $"{(int)span.TotalMinutes} phút trước";
-        if (span < TimeSpan.FromDays(1)) return $"{(int)span.TotalHours} giờ trước";
-        return $"{(int)span.TotalDays} ngày trước";
+        if (span < TimeSpan.FromMinutes(1)) return L.T("vừa xong");
+        if (span < TimeSpan.FromHours(1)) return L.F($"{(int)span.TotalMinutes} phút trước");
+        if (span < TimeSpan.FromDays(1)) return L.F($"{(int)span.TotalHours} giờ trước");
+        return L.F($"{(int)span.TotalDays} ngày trước");
     }
 
     /// <summary>Two cards on one line, the same height.</summary>
@@ -167,7 +167,7 @@ public sealed partial class IslandWindow
         var providers = AgentMonitor.Providers();
         if (!AgentMonitor.Available || providers.Count == 0)
         {
-            _agentsContent.Children.Add(Card(new TextBlock { Text = "Chưa thấy Claude Code hay Codex trên máy này.", FontSize = 13, Foreground = Material.Display.Secondary, TextWrapping = TextWrapping.Wrap }));
+            _agentsContent.Children.Add(Card(new TextBlock { Text = L.T("Chưa thấy Claude Code hay Codex trên máy này."), FontSize = 13, Foreground = Material.Display.Secondary, TextWrapping = TextWrapping.Wrap }));
             return;
         }
         var sessions = AgentMonitor.Sessions();
@@ -178,7 +178,7 @@ public sealed partial class IslandWindow
         _agentsContent.Children.Add(Pair(limits[0], limits.Count > 1 ? limits[1] : null));
         _agentsContent.Children.Add(Pair(SpendCard(providers), NowCard(providers, sessions)));
 
-        var more = Material.Display.Pressable(new TextBlock { Text = "Xem đầy đủ trong bảng điều khiển  ›", FontSize = 12.5, Foreground = Material.Display.Accent }, () => OpenPanel?.Invoke("agents"), new Thickness(8, 4, 8, 8));
+        var more = Material.Display.Pressable(new TextBlock { Text = L.T("Xem đầy đủ trong bảng điều khiển  ›"), FontSize = 12.5, Foreground = Material.Display.Accent }, () => OpenPanel?.Invoke("agents"), new Thickness(8, 4, 8, 8));
         more.HorizontalAlignment = HorizontalAlignment.Center;
         _agentsContent.Children.Add(more);
         UpdateAgentElapsed();
@@ -209,11 +209,11 @@ public sealed partial class IslandWindow
         {
             stack.Children.Add(new TextBlock
             {
-                Text = provider == AgentProvider.Claude ? "Mở app Claude để xem hạn mức của gói." : "Codex chưa báo hạn mức.",
+                Text = provider == AgentProvider.Claude ? L.T("Mở app Claude để xem hạn mức của gói.") : L.T("Codex chưa báo hạn mức."),
                 FontSize = 12, Foreground = Material.Display.Secondary, TextWrapping = TextWrapping.Wrap,
             });
             if (AgentMonitor.LastActivity(provider) is { } last)
-                stack.Children.Add(new TextBlock { Text = "Dùng lần cuối " + Ago(last), FontSize = 11.5, Foreground = Faint, Margin = new Thickness(0, 4, 0, 0) });
+                stack.Children.Add(new TextBlock { Text = L.T("Dùng lần cuối ") + Ago(last), FontSize = 11.5, Foreground = Faint, Margin = new Thickness(0, 4, 0, 0) });
             return Card(stack);
         }
 
@@ -224,7 +224,7 @@ public sealed partial class IslandWindow
             rows.Children.Add(LimitRow(provider, window, now));
         stack.Children.Add(rows);
         if (stale)
-            stack.Children.Add(new TextBlock { Text = "Cập nhật " + Ago(limits.Observed), FontSize = 11, Foreground = Faint, Margin = new Thickness(0, 2, 0, 0) });
+            stack.Children.Add(new TextBlock { Text = L.T("Cập nhật ") + Ago(limits.Observed), FontSize = 11, Foreground = Faint, Margin = new Thickness(0, 2, 0, 0) });
         return Card(stack);
     }
 
@@ -238,7 +238,7 @@ public sealed partial class IslandWindow
         row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-        var label = window.Session ? "Phiên" : window.Minutes is >= 8640 and <= 11520 ? "Tuần" : Renews(TimeSpan.FromMinutes(window.Minutes));
+        var label = window.Session ? L.T("Phiên") : window.Minutes is >= 8640 and <= 11520 ? L.T("Tuần") : Renews(TimeSpan.FromMinutes(window.Minutes));
         row.Children.Add(new TextBlock { Text = label, FontSize = 12.5, FontWeight = FontWeights.SemiBold, Foreground = Material.Display.Text, VerticalAlignment = VerticalAlignment.Center });
 
         double? pace = null;
@@ -279,9 +279,9 @@ public sealed partial class IslandWindow
         Grid.SetColumnSpan(bar, 3);
         row.Children.Add(bar);
 
-        var help = $"{label} · đã dùng {window.Used:0}% · còn {left:0}%";
+        var help = L.F($"{label} · đã dùng {window.Used:0}% · còn {left:0}%");
         if (window.ResetsAt is { } at)
-            help += $" · làm mới {at:HH:mm dd/MM}" + (window.Estimated ? " (ước tính)" : "");
+            help += L.F($" · làm mới {at:HH:mm dd/MM}") + (window.Estimated ? L.T(" (ước tính)") : "");
         row.ToolTip = help;
         return row;
     }
@@ -298,7 +298,7 @@ public sealed partial class IslandWindow
         var read = spend.Sum(s => s.CacheRead);
 
         var period = new StackPanel { Orientation = Orientation.Horizontal };
-        period.Children.Add(new TextBlock { Text = _spendWeek ? "7 ngày" : "Hôm nay", FontSize = 11.5, FontWeight = FontWeights.SemiBold, Foreground = Faint, VerticalAlignment = VerticalAlignment.Center });
+        period.Children.Add(new TextBlock { Text = _spendWeek ? L.T("7 ngày") : L.T("Hôm nay"), FontSize = 11.5, FontWeight = FontWeights.SemiBold, Foreground = Faint, VerticalAlignment = VerticalAlignment.Center });
         var chevron = Material.Display.Glyph("", 8);
         chevron.Foreground = Faint;
         chevron.Margin = new Thickness(4, 1, 0, 0);
@@ -308,17 +308,17 @@ public sealed partial class IslandWindow
             _spendWeek = !_spendWeek;
             DrawAgents();
         }, new Thickness(6, 1, 4, 2));
-        periodButton.ToolTip = "Đổi khoảng thời gian";
+        periodButton.ToolTip = L.T("Đổi khoảng thời gian");
 
         var stack = new StackPanel();
-        stack.Children.Add(CardHeader(SymbolIcon(""), "Chi tiêu", periodButton));
+        stack.Children.Add(CardHeader(SymbolIcon(""), L.T("Chi tiêu"), periodButton));
 
         var figure = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, -2, 0, 4) };
         figure.Children.Add(new TextBlock { Text = (priced ? "" : "≥ ") + AgentPricing.Format(cost), FontFamily = Theme.Mono, FontSize = 23, VerticalAlignment = VerticalAlignment.Bottom });
-        figure.Children.Add(new TextBlock { Text = "giá trị API", FontSize = 11.5, Foreground = Faint, Margin = new Thickness(8, 0, 0, 4), VerticalAlignment = VerticalAlignment.Bottom });
+        figure.Children.Add(new TextBlock { Text = L.T("giá trị API"), FontSize = 11.5, Foreground = Faint, Margin = new Thickness(8, 0, 0, 4), VerticalAlignment = VerticalAlignment.Bottom });
         figure.ToolTip = priced
-            ? "Số tiền nếu trả theo giá API. Gói thuê bao tính khác."
-            : "Có model chưa biết giá nên chưa tính vào; con số thật cao hơn.";
+            ? L.T("Số tiền nếu trả theo giá API. Gói thuê bao tính khác.")
+            : L.T("Có model chưa biết giá nên chưa tính vào; con số thật cao hơn.");
         stack.Children.Add(figure);
 
         stack.Children.Add(SplitBar(providers.Select(p => spend.FirstOrDefault(s => s.Provider == p)).ToList(), priced));
@@ -326,7 +326,7 @@ public sealed partial class IslandWindow
         var footer = AgentMonitor.Tokens(tokens) + " token";
         var cacheable = spend.Sum(s => s.Input + s.CacheRead + s.CacheWrite);
         if (cacheable > 0 && read > 0)
-            footer += $" · {100.0 * read / cacheable:0}% từ cache";
+            footer += L.F($" · {100.0 * read / cacheable:0}% từ cache");
         stack.Children.Add(new TextBlock { Text = footer, FontSize = 11.5, Foreground = Faint, Margin = new Thickness(0, 6, 0, 0), TextTrimming = TextTrimming.CharacterEllipsis });
         return Card(stack);
     }
@@ -361,7 +361,7 @@ public sealed partial class IslandWindow
         var stack = new StackPanel();
         var busy = providers.FirstOrDefault(p => sessions.Any(s => s.Provider == p && s.Working));
         var anyBusy = sessions.Any(s => s.Working);
-        stack.Children.Add(CardHeader(SymbolIcon("", anyBusy ? Material.Display.Accent : null), "Bây giờ", anyBusy ? new UIElement[] { Pulse(Material.Display.Accent) } : Array.Empty<UIElement>()));
+        stack.Children.Add(CardHeader(SymbolIcon("", anyBusy ? Material.Display.Accent : null), L.T("Bây giờ"), anyBusy ? new UIElement[] { Pulse(Material.Display.Accent) } : Array.Empty<UIElement>()));
         foreach (var provider in providers)
         {
             var line = new Grid { Margin = new Thickness(0, 1, 0, 5) };
@@ -377,11 +377,11 @@ public sealed partial class IslandWindow
             var waiting = sessions.Count(s => s.Provider == provider && s.NeedsInput);
             var state = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
             if (working > 0)
-                state.Children.Add(new TextBlock { Text = $"{working} đang chạy", FontSize = 11.5, FontWeight = FontWeights.SemiBold, Foreground = Material.Display.Accent });
+                state.Children.Add(new TextBlock { Text = L.F($"{working} đang chạy"), FontSize = 11.5, FontWeight = FontWeights.SemiBold, Foreground = Material.Display.Accent });
             if (waiting > 0)
-                state.Children.Add(new TextBlock { Text = (working > 0 ? " · " : "") + $"{waiting} chờ bạn", FontSize = 11.5, FontWeight = FontWeights.SemiBold, Foreground = Amber });
+                state.Children.Add(new TextBlock { Text = (working > 0 ? " · " : "") + L.F($"{waiting} chờ bạn"), FontSize = 11.5, FontWeight = FontWeights.SemiBold, Foreground = Amber });
             if (working == 0 && waiting == 0)
-                state.Children.Add(new TextBlock { Text = AgentMonitor.LastActivity(provider) is { } last ? Ago(last) : "Rảnh", FontSize = 11.5, Foreground = Faint });
+                state.Children.Add(new TextBlock { Text = AgentMonitor.LastActivity(provider) is { } last ? Ago(last) : L.T("Rảnh"), FontSize = 11.5, Foreground = Faint });
             Grid.SetColumn(state, 2);
             line.Children.Add(state);
             stack.Children.Add(line);
@@ -398,14 +398,14 @@ public sealed partial class IslandWindow
         var working = shown.Count(s => s.Working);
         var waiting = shown.Count(s => s.NeedsInput);
         var accessories = new List<UIElement>();
-        if (waiting > 0) accessories.Add(Chip($"{waiting} chờ bạn", Amber));
-        if (working > 0) accessories.Add(Chip($"{working} đang chạy", Material.Display.Accent));
+        if (waiting > 0) accessories.Add(Chip(L.F($"{waiting} chờ bạn"), Amber));
+        if (working > 0) accessories.Add(Chip(L.F($"{working} đang chạy"), Material.Display.Accent));
 
         var stack = new StackPanel();
-        stack.Children.Add(CardHeader(SymbolIcon(""), "Phiên", accessories.ToArray()));
+        stack.Children.Add(CardHeader(SymbolIcon(""), L.T("Phiên"), accessories.ToArray()));
         if (shown.Count == 0)
         {
-            stack.Children.Add(new TextBlock { Text = "Không có phiên nào đang chạy hay chờ bạn.", FontSize = 12.5, Foreground = Faint });
+            stack.Children.Add(new TextBlock { Text = L.T("Không có phiên nào đang chạy hay chờ bạn."), FontSize = 12.5, Foreground = Faint });
             return Card(stack);
         }
         foreach (var session in shown)
@@ -427,14 +427,14 @@ public sealed partial class IslandWindow
 
         var text = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
         text.Children.Add(new TextBlock { Text = session.Title, FontSize = 13, FontWeight = FontWeights.SemiBold, TextTrimming = TextTrimming.CharacterEllipsis });
-        var detail = string.Join(" · ", new[] { session.Machine.Length > 0 ? "Máy " + session.Machine : "", session.Project, session.Activity }.Where(x => x.Length > 0));
+        var detail = string.Join(" · ", new[] { session.Machine.Length > 0 ? L.T("Máy ") + session.Machine : "", session.Project, session.Activity }.Where(x => x.Length > 0));
         text.Children.Add(new TextBlock { Text = detail.Length > 0 ? detail : AgentMonitor.Name(session.Provider), FontSize = 11.5, Foreground = Faint, Margin = new Thickness(0, 2, 0, 0), TextTrimming = TextTrimming.CharacterEllipsis });
         Grid.SetColumn(text, 1);
         grid.Children.Add(text);
 
         FrameworkElement state;
         if (session.NeedsInput)
-            state = Chip("Cần bạn", Amber);
+            state = Chip(L.T("Cần bạn"), Amber);
         else
         {
             var clock = new TextBlock { FontFamily = Theme.Mono, FontSize = 11.5, Foreground = Material.Display.Accent };
@@ -468,7 +468,7 @@ public sealed partial class IslandWindow
             e.Handled = true;
             if (!AgentOpen.Open(session))
             {
-                Notify("", $"Không mở được app {app}", 4);
+                Notify("", L.F($"Không mở được app {app}"), 4);
                 return;
             }
             // Collapse so the app is not covered.

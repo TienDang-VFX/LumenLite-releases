@@ -112,7 +112,7 @@ internal static class RustDesk
     /// <summary>Shows the machine: its tab if it is open, otherwise a new connection.</summary>
     public static void Connect(string id)
     {
-        var exe = Exe() ?? throw new InvalidOperationException("Không tìm thấy RustDesk.");
+        var exe = Exe() ?? throw new InvalidOperationException(L.T("Không tìm thấy RustDesk."));
         _picked = id;
         _pickedAt = DateTime.UtcNow;
         // "--connect" switches the tab but leaves a minimized window (as a second press leaves it) on the taskbar:

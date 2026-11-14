@@ -124,18 +124,18 @@ internal static class SystemMonitor
         var before = _cpuHighSeconds;
         _cpuHighSeconds = s.Cpu >= 90 ? _cpuHighSeconds + step : 0;
         if (Store.S.AlertCpu && before < 60 && _cpuHighSeconds >= 60)
-            Raise("cpu", "", "CPU đã chạy trên 90% suốt 1 phút");
+            Raise("cpu", "", L.T("CPU đã chạy trên 90% suốt 1 phút"));
 
         var memory = s.MemoryTotal == 0 ? 0 : 100.0 * s.MemoryUsed / s.MemoryTotal;
         if (Store.S.AlertMemory && memory >= 92)
-            Raise("memory", "", $"RAM gần đầy: {memory:0}% đang dùng");
+            Raise("memory", "", L.F($"RAM gần đầy: {memory:0}% đang dùng"));
 
         if (Store.S.AlertDisk && s.DiskFree is { } free && s.DiskTotal is { } total && total > 0
             && (free < 10L * 1024 * 1024 * 1024 || free < total / 20))
-            Raise("disk", "", $"Ổ C sắp đầy: còn {free / 1073741824.0:0.0} GB");
+            Raise("disk", "", L.F($"Ổ C sắp đầy: còn {free / 1073741824.0:0.0} GB"));
 
         if (Store.S.AlertBattery && s.Battery is { } battery && !s.Charging && battery <= 0.2)
-            Raise("battery", "", $"Pin yếu: còn {battery * 100:0}%");
+            Raise("battery", "", L.F($"Pin yếu: còn {battery * 100:0}%"));
     }
 
     /// <summary>Each kind of alert shows at most once every 30 minutes.</summary>
@@ -150,7 +150,7 @@ internal static class SystemMonitor
     public static string Uptime()
     {
         var up = TimeSpan.FromMilliseconds(Environment.TickCount64);
-        return up.TotalDays >= 1 ? $"{(int)up.TotalDays} ngày {up.Hours} giờ" : $"{up.Hours} giờ {up.Minutes} phút";
+        return up.TotalDays >= 1 ? L.F($"{(int)up.TotalDays} ngày {up.Hours} giờ") : L.F($"{up.Hours} giờ {up.Minutes} phút");
     }
 
     public static string Speed(double bytesPerSecond) => bytesPerSecond switch

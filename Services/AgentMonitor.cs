@@ -237,15 +237,15 @@ internal static class AgentMonitor
         var title = desktop?.Title is { Length: > 0 } named ? named
             : f.Title.Length > 0 ? f.Title
             : f.Provider == AgentProvider.Codex && CodexTitles.TryGetValue(f.Id, out var thread) ? thread
-            : "Phiên " + f.Id[..Math.Min(8, f.Id.Length)];
+            : L.T("Phiên ") + f.Id[..Math.Min(8, f.Id.Length)];
         var url = f.Provider == AgentProvider.Codex
             ? "codex://threads/" + Uri.EscapeDataString(f.Id)
             : desktop != null
                 ? "claude://code/continue?session=" + Uri.EscapeDataString(desktop.LocalId)
                 // A session run in a terminal is brought into the Claude app.
                 : "claude://resume?session=" + Uri.EscapeDataString(f.Id);
-        var activity = codexWaits ? "Đang chờ bạn trong app Codex"
-            : waiting && f.Question.Length == 0 ? "Đang chờ bạn trong app Claude" : f.Activity;
+        var activity = codexWaits ? L.T("Đang chờ bạn trong app Codex")
+            : waiting && f.Question.Length == 0 ? L.T("Đang chờ bạn trong app Claude") : f.Activity;
         var last = desktop != null && desktop.LastActivity > f.LastEntry ? desktop.LastActivity : f.LastEntry;
         return new(f.Provider, f.Id, title, f.Project, activity, IsWorking(f) && !codexWaits, waiting, last, f.TurnStarted, f.Tokens, url);
     }
@@ -484,7 +484,7 @@ internal static class AgentMonitor
                 if (uc.ValueKind == JsonValueKind.String)
                 {
                     // A new prompt means any question was answered or set aside.
-                    state.Activity = "Đang đọc yêu cầu: " + Shorten(uc.GetString());
+                    state.Activity = L.T("Đang đọc yêu cầu: ") + Shorten(uc.GetString());
                     state.Question = "";
                 }
                 else if (uc.ValueKind == JsonValueKind.Array)
@@ -513,7 +513,7 @@ internal static class AgentMonitor
         state.ToolRunning = false;
         if (stop == "end_turn")
         {
-            state.Activity = "Đã xong lượt";
+            state.Activity = L.T("Đã xong lượt");
             state.Question = "";
         }
 
@@ -530,7 +530,7 @@ internal static class AgentMonitor
                     if (Str(block, "name") is "AskUserQuestion" or "ExitPlanMode")
                     {
                         state.Question = Str(block, "id") ?? "?";
-                        state.Activity = Str(block, "name") == "ExitPlanMode" ? "Chờ bạn duyệt kế hoạch" : "Đang hỏi bạn";
+                        state.Activity = Str(block, "name") == "ExitPlanMode" ? L.T("Chờ bạn duyệt kế hoạch") : L.T("Đang hỏi bạn");
                     }
                 }
                 else if (kind == "text" && stop != "end_turn" && block.TryGetProperty("text", out var text))
@@ -608,7 +608,7 @@ internal static class AgentMonitor
                 state.EndedTurn = false;
                 state.TurnStarted = when;
                 state.LastEntry = when;
-                state.Activity = "Đang suy nghĩ";
+                state.Activity = L.T("Đang suy nghĩ");
                 return;
             case "task_complete":
             case "turn_aborted":
@@ -616,7 +616,7 @@ internal static class AgentMonitor
                 state.ToolRunning = false;
                 state.Question = "";
                 state.LastEntry = when;
-                state.Activity = "Đã xong lượt";
+                state.Activity = L.T("Đã xong lượt");
                 return;
             case "token_count":
                 state.LastEntry = when;
@@ -646,7 +646,7 @@ internal static class AgentMonitor
             if (name.Contains("request_user_input", StringComparison.Ordinal))
             {
                 state.Question = Str(item, "call_id") ?? "?";
-                state.Activity = "Đang hỏi bạn";
+                state.Activity = L.T("Đang hỏi bạn");
             }
             else
                 state.Activity = Describe(name, default);
@@ -1221,15 +1221,15 @@ internal static class AgentMonitor
         }
         var verb = name switch
         {
-            "Bash" or "PowerShell" or "shell" or "shell_command" or "exec_command" or "local_shell" => "Chạy lệnh",
-            "Read" or "view_image" => "Đọc",
-            "Edit" or "MultiEdit" or "apply_patch" => "Sửa",
-            "Write" => "Viết",
-            "Grep" or "Glob" => "Tìm",
+            "Bash" or "PowerShell" or "shell" or "shell_command" or "exec_command" or "local_shell" => L.T("Chạy lệnh"),
+            "Read" or "view_image" => L.T("Đọc"),
+            "Edit" or "MultiEdit" or "apply_patch" => L.T("Sửa"),
+            "Write" => L.T("Viết"),
+            "Grep" or "Glob" => L.T("Tìm"),
             "WebFetch" or "WebSearch" or "web_search" => "Tra web",
-            "Agent" or "Task" or "spawn_agent" => "Giao việc cho agent",
-            "update_plan" => "Cập nhật kế hoạch",
-            _ => name.StartsWith("mcp__") ? "Dùng công cụ " + name.Split("__").Last() : name,
+            "Agent" or "Task" or "spawn_agent" => L.T("Giao việc cho agent"),
+            "update_plan" => L.T("Cập nhật kế hoạch"),
+            _ => name.StartsWith("mcp__") ? L.T("Dùng công cụ ") + name.Split("__").Last() : name,
         };
         return detail is { Length: > 0 } ? $"{verb}: {Shorten(detail)}" : verb;
     }

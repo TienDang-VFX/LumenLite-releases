@@ -32,6 +32,8 @@ public sealed class App : Application
     {
         // A copy started by an update waits for the one it replaces to exit.
         Updater.WaitForPrevious(args);
+        // "--notes-sync owner/repo": written down first, for whichever copy ends up running.
+        var notesRequest = NotesSync.Request.Save(args);
         // Started inside a terminal's or an agent's job, LumenLite would go when that tool closes: run outside it.
         if (Snapshot.Folder(args) == null && Detach.Relaunched(args))
             return;
@@ -42,7 +44,8 @@ public sealed class App : Application
             {
                 var tab = Array.IndexOf(args, "--tab") is var i and >= 0 && i + 1 < args.Length ? args[i + 1] : "";
                 System.IO.Directory.CreateDirectory(Store.Folder);
-                System.IO.File.WriteAllText(System.IO.Path.Combine(Store.Folder, TabFile), tab);
+                if (!notesRequest)
+                    System.IO.File.WriteAllText(System.IO.Path.Combine(Store.Folder, TabFile), tab);
                 // Lets the running copy bring its panel to the front (Windows only allows that when asked).
                 AllowSetForegroundWindow(-1);
                 if (EventWaitHandle.TryOpenExisting(ShowSignal, out var signal))
@@ -87,7 +90,7 @@ public sealed class App : Application
             Panel.Push(new CleanerPage(Panel));
             await Snapshot.Settle(9000);
             Snapshot.Save(Panel, folder, "panel-cleaner", Panel.OnGlass);
-            Panel.Confirm("Thoát LumenLite?", "Mọi widget, Dynamic Island và phím tắt sẽ tắt cho tới lần mở sau.", "Thoát", () => { });
+            Panel.Confirm(L.T("Thoát LumenLite?"), L.T("Mọi widget, Dynamic Island và phím tắt sẽ tắt cho tới lần mở sau."), L.T("Thoát"), () => { });
             await Snapshot.Settle(300);
             Snapshot.Save(Panel, folder, "panel-confirm", Panel.OnGlass);
             Panel.HidePanel();
@@ -136,6 +139,12 @@ public sealed class App : Application
             {
                 Dispatcher.BeginInvoke(() =>
                 {
+                    // Started again with --notes-sync: set the sync up, without opening the panel.
+                    if (NotesSync.Request.Pending)
+                    {
+                        NotesSync.Request.RunPending();
+                        return;
+                    }
                     string? route = null;
                     try
                     {
@@ -163,6 +172,7 @@ public sealed class App : Application
         ShutdownMode = ShutdownMode.OnExplicitShutdown;
         DispatcherUnhandledException += OnUnhandled;
         Store.Load();
+        L.Init(Store.S.Language);
         // Drawing on the GPU keeps the animations smooth: on the CPU every frame of a transparent window, its shadows
         // included, is drawn and copied pixel by pixel. Software drawing saves the driver's per-process memory (tens
         // of MB on NVIDIA) and stays available as a setting for machines short on memory.
@@ -183,7 +193,7 @@ public sealed class App : Application
         // The Notes widget is gone; its text moves into a Scratchpad tab.
         if (!string.IsNullOrWhiteSpace(Store.S.Notes))
         {
-            Store.S.Pads.Add(new ScratchPad { Title = "Ghi chú cũ", Text = Store.S.Notes });
+            Store.S.Pads.Add(new ScratchPad { Title = L.T("Ghi chú cũ"), Text = Store.S.Notes });
             Store.S.Notes = "";
             Store.SaveSoon();
         }
@@ -215,6 +225,10 @@ public sealed class App : Application
         AgentOpen.Unknown += text => _island?.Notify("", text, 4);
         _island.OpenRadial = OpenRadial;
         _island.OpenNotes = () => Pad.Open();
+        StickyNotes.OpenInScratchpad = pad => Pad.Open(pad);
+        StickyNotes.Restore();
+        NotesSync.Start();
+        NotesSync.Request.RunPending();
         _island.Enabled = Store.S.Island;
         _background = new Background(_island);
         // The panel, Command Bar and Scratchpad are built the first time they are opened.
@@ -232,7 +246,7 @@ public sealed class App : Application
         Updater.Start();
         Updater.Ready += version =>
         {
-            var text = $"Đã tải LumenLite {version.Major}.{version.Minor}.{version.Build}: khởi động lại để dùng (Cài đặt hoặc Command Bar)";
+            var text = L.F($"Đã tải LumenLite {version.Major}.{version.Minor}.{version.Build}: khởi động lại để dùng (Cài đặt hoặc Command Bar)");
             _island?.Notify("\uE777", text, 8);
             _tray?.Balloon(text);
         };
@@ -306,7 +320,7 @@ public sealed class App : Application
                 var id = peer.Id;
                 var mac = peer.Platform.Contains("Mac", StringComparison.OrdinalIgnoreCase);
                 var name = peer.Host.Length > 0 ? peer.Host : peer.Id;
-                items.Add(new("rustdesk:" + id, mac ? "\uE7F8" : "\uE7F4", peer.Showing ? name + " · đang xem" : name, () =>
+                items.Add(new("rustdesk:" + id, mac ? "\uE7F8" : "\uE7F4", peer.Showing ? name + L.T(" · đang xem") : name, () =>
                 {
                     // Pressed again while that screen is in front: back to the desktop.
                     var minimized = RustDesk.Toggle(id);
@@ -343,11 +357,11 @@ public sealed class App : Application
     {
         var panel = new PanelWindow();
         // Five tabs. Each opens by its own name, and by the names of the screens that were folded into it.
-        panel.AddTab("sound", "\uE9E9", "Âm thanh", () => new Joined(panel, ("sound", new SoundPage(panel)), ("devices", new DevicesPage(panel))), "devices");
-        panel.AddTab("system", "\uE9D9", "Hệ thống", () => new Switched(panel, ("system", new SystemPage(panel)), ("network", new NetworkPage(panel)), ("storage", new StoragePage(panel))), "network", "storage");
-        panel.AddTab("apps", "\uE71D", "Ứng dụng", () => new AppsPage(panel));
+        panel.AddTab("sound", "\uE9E9", L.T("Âm thanh"), () => new Joined(panel, ("sound", new SoundPage(panel)), ("devices", new DevicesPage(panel))), "devices");
+        panel.AddTab("system", "\uE9D9", L.T("Hệ thống"), () => new Switched(panel, ("system", new SystemPage(panel)), ("network", new NetworkPage(panel)), ("storage", new StoragePage(panel))), "network", "storage");
+        panel.AddTab("apps", "\uE71D", L.T("Ứng dụng"), () => new AppsPage(panel));
         panel.AddTab("agents", "\uE99A", "AI agent", () => new AgentsPage(panel));
-        panel.AddTab("tools", "\uE90F", "Tiện ích", () => new Joined(panel,
+        panel.AddTab("tools", "\uE90F", L.T("Tiện ích"), () => new Joined(panel,
             ("tools", new ToolsPage(panel, () => Bar.Open(), () => Pad.Open(), island, background, () => panel.Push(new RadialPage(panel, RadialItems, background.RadialHotkey, on =>
             {
                 Store.S.RadialMiddleHold = on;
@@ -376,46 +390,61 @@ public sealed class App : Application
     private IEnumerable<CommandItem> Commands()
     {
         var panel = Panel;
-        CommandItem Item(string title, string subtitle, string glyph, Action run) => new(title, subtitle, "Lệnh", glyph, run);
-        CommandItem Settings(string title, string uri, string glyph) => new(title, "Cài đặt Windows", "Windows", glyph, () => CommandBar.Launch(uri));
-        yield return Item("Mở bảng điều khiển LumenLite", "Âm thanh, thiết bị, hệ thống, mạng, ứng dụng…", "\uF0E2", () => panel.ShowPanel());
-        yield return Item("Scratchpad", "Ghi chú nhanh nhiều tab", "\uE70B", () => Pad.Open());
-        yield return Item("UniKey, màn hình, độ sáng", "Đổi kiểu gõ, bật/tắt màn hình, chỉnh độ sáng", "", () => panel.ShowPanel("devices"));
-        yield return Item("Trộn âm lượng", "Âm lượng và đầu ra riêng từng app", "\uE9E9", () => panel.ShowPanel("sound"));
-        yield return Item("Khóa máy", "Win + L", "\uE72E", QuickActions.Lock);
-        yield return Item("Tắt màn hình", "Rê chuột hoặc bấm phím để bật lại", "\uE7F4", () => QuickActions.ScreensOff(IntPtr.Zero));
-        yield return Item("Dọn thùng rác", "Windows hỏi lại trước khi xóa", "\uE74D", () => QuickActions.EmptyRecycleBin(IntPtr.Zero));
-        yield return Item("Ẩn/hiện icon desktop", "", "\uE8FC", QuickActions.ToggleDesktopIcons);
-        yield return Item("Đổi giao diện sáng/tối", QuickActions.LightTheme() ? "Đang sáng" : "Đang tối", "\uE793", () => QuickActions.SetLightTheme(!QuickActions.LightTheme()));
-        yield return Item("Tắt/bật micro", "Ctrl+Alt+M", "\uE720", () => _background!.ToggleMic());
-        yield return Item("Chuyển loa/tai nghe", "Ctrl+Alt+O", "\uE7F5", () => _background!.NextOutput());
-        yield return Item("AI agent", "Token và phiên Claude Code", "\uE99A", () => panel.ShowPanel("agents"));
-        yield return Item("Hệ thống", "CPU, GPU, RAM, cảnh báo", "\uE9D9", () => panel.ShowPanel("system"));
-        yield return Item("Đo tốc độ mạng", "Ping, tải xuống, tải lên", "\uE774", () => panel.ShowPanel("network"));
-        yield return Item("Dọn dẹp ổ đĩa", "File tạm, cache trình duyệt, báo lỗi", "\uE899", () => { panel.ShowPanel("storage"); panel.Push(new CleanerPage(panel)); });
-        yield return Item("Dọn file app nhắn tin", "Zalo, Telegram, Messenger…", "\uE8BD", () => { panel.ShowPanel("storage"); panel.Push(new MessagingPage(panel)); });
-        yield return Item("Thoát app", "Thoát một app, tất cả, hoặc tất cả trừ app đang dùng", "\uE711", () => panel.ShowPanel("apps"));
-        yield return Item("Cập nhật app", "Qua winget", "\uE895", () => { panel.ShowPanel("apps"); panel.Push(new UpdatesPage(panel)); });
-        yield return Item("Gỡ cài đặt app", "Kèm dọn thư mục còn sót", "\uE74D", () => { panel.ShowPanel("apps"); panel.Push(new UninstallPage(panel)); });
-        yield return Item("Cổng mạng đang mở", "Port và tiến trình", "\uE968", () => { panel.ShowPanel("apps"); panel.Push(new PortsPage(panel)); });
+        CommandItem Item(string title, string subtitle, string glyph, Action run) => new(title, subtitle, L.T("Lệnh"), glyph, run);
+        CommandItem Settings(string title, string uri, string glyph) => new(title, L.T("Cài đặt Windows"), "Windows", glyph, () => CommandBar.Launch(uri));
+        yield return Item(L.T("Mở bảng điều khiển LumenLite"), L.T("Âm thanh, thiết bị, hệ thống, mạng, ứng dụng…"), "\uF0E2", () => panel.ShowPanel());
+        yield return Item("Scratchpad", L.T("Ghi chú nhanh nhiều tab"), "\uE70B", () => Pad.Open());
+        yield return Item(L.T("Đồng bộ ghi chú với GitHub"), NotesSync.Active ? NotesSync.Status : L.T("Thiết lập repo và token"), "", () =>
+        {
+            if (NotesSync.Active) _ = NotesSync.SyncAsync();
+            else { panel.ShowPanel(); panel.Push(new NotesSyncPage(panel)); }
+        });
+        yield return Item(L.T("Ghi chú mới trên màn hình"), L.T("Một ghi chú dán, kéo đi đâu cũng được rồi ghim lại"), "\uE7C4", NewStickyNote);
+        yield return Item(L.T("UniKey, màn hình, độ sáng"), L.T("Đổi kiểu gõ, bật/tắt màn hình, chỉnh độ sáng"), "", () => panel.ShowPanel("devices"));
+        yield return Item(L.T("Trộn âm lượng"), L.T("Âm lượng và đầu ra riêng từng app"), "\uE9E9", () => panel.ShowPanel("sound"));
+        yield return Item(L.T("Khóa máy"), "Win + L", "\uE72E", QuickActions.Lock);
+        yield return Item(L.T("Tắt màn hình"), L.T("Rê chuột hoặc bấm phím để bật lại"), "\uE7F4", () => QuickActions.ScreensOff(IntPtr.Zero));
+        yield return Item(L.T("Dọn thùng rác"), L.T("Windows hỏi lại trước khi xóa"), "\uE74D", () => QuickActions.EmptyRecycleBin(IntPtr.Zero));
+        yield return Item(L.T("Ẩn/hiện icon desktop"), "", "\uE8FC", QuickActions.ToggleDesktopIcons);
+        yield return Item(L.T("Đổi giao diện sáng/tối"), QuickActions.LightTheme() ? L.T("Đang sáng") : L.T("Đang tối"), "\uE793", () => QuickActions.SetLightTheme(!QuickActions.LightTheme()));
+        yield return Item(L.T("Tắt/bật micro"), "Ctrl+Alt+M", "\uE720", () => _background!.ToggleMic());
+        yield return Item(L.T("Chuyển loa/tai nghe"), "Ctrl+Alt+O", "\uE7F5", () => _background!.NextOutput());
+        yield return Item("AI agent", L.T("Token và phiên Claude Code"), "\uE99A", () => panel.ShowPanel("agents"));
+        yield return Item(L.T("Hệ thống"), L.T("CPU, GPU, RAM, cảnh báo"), "\uE9D9", () => panel.ShowPanel("system"));
+        yield return Item(L.T("Đo tốc độ mạng"), L.T("Ping, tải xuống, tải lên"), "\uE774", () => panel.ShowPanel("network"));
+        yield return Item(L.T("Dọn dẹp ổ đĩa"), L.T("File tạm, cache trình duyệt, báo lỗi"), "\uE899", () => { panel.ShowPanel("storage"); panel.Push(new CleanerPage(panel)); });
+        yield return Item(L.T("Dọn file app nhắn tin"), "Zalo, Telegram, Messenger…", "\uE8BD", () => { panel.ShowPanel("storage"); panel.Push(new MessagingPage(panel)); });
+        yield return Item(L.T("Thoát app"), L.T("Thoát một app, tất cả, hoặc tất cả trừ app đang dùng"), "\uE711", () => panel.ShowPanel("apps"));
+        yield return Item(L.T("Cập nhật app"), L.T("Qua winget"), "\uE895", () => { panel.ShowPanel("apps"); panel.Push(new UpdatesPage(panel)); });
+        yield return Item(L.T("Gỡ cài đặt app"), L.T("Kèm dọn thư mục còn sót"), "\uE74D", () => { panel.ShowPanel("apps"); panel.Push(new UninstallPage(panel)); });
+        yield return Item(L.T("Cổng mạng đang mở"), L.T("Port và tiến trình"), "\uE968", () => { panel.ShowPanel("apps"); panel.Push(new PortsPage(panel)); });
         yield return Updater.Status == Updater.State.Ready
-            ? Item("Khởi động lại để cập nhật LumenLite", Updater.Message, "\uE777", () => Updater.Restart(Quit))
-            : Item("Kiểm tra cập nhật LumenLite", $"Đang dùng {Updater.CurrentText}", "\uE777", () => _ = Updater.CheckAsync());
-        yield return Item("Lau phím (Cleaning Mode)", "Khóa bàn phím để lau", "\uE765", CleaningMode.Start);
-        yield return Item("Chỉnh sửa bố cục widget", "Kéo để di chuyển, Esc để xong", "\uE70F", () => WidgetWindow.SetEditing(true));
+            ? Item(L.T("Khởi động lại để cập nhật LumenLite"), Updater.Message, "\uE777", () => Updater.Restart(Quit))
+            : Item(L.T("Kiểm tra cập nhật LumenLite"), L.F($"Đang dùng {Updater.CurrentText}"), "\uE777", () => _ = Updater.CheckAsync());
+        yield return Item(L.T("Lau phím (Cleaning Mode)"), L.T("Khóa bàn phím để lau"), "\uE765", CleaningMode.Start);
+        yield return Item(L.T("Chỉnh sửa bố cục widget"), L.T("Kéo để di chuyển, Esc để xong"), "\uE70F", () => WidgetWindow.SetEditing(true));
         yield return Settings("Bluetooth", "ms-settings:bluetooth", "\uE702");
         yield return Settings("Wi-Fi", "ms-settings:network-wifi", "\uE701");
-        yield return Settings("Âm thanh (Windows)", "ms-settings:sound", "\uE767");
-        yield return Settings("Màn hình (Windows)", "ms-settings:display", "\uE7F4");
-        yield return Settings("Cài đặt Windows", "ms-settings:", "\uE713");
-        yield return Settings("Ứng dụng đã cài (Windows)", "ms-settings:appsfeatures", "\uE71D");
+        yield return Settings(L.T("Âm thanh (Windows)"), "ms-settings:sound", "\uE767");
+        yield return Settings(L.T("Màn hình (Windows)"), "ms-settings:display", "\uE7F4");
+        yield return Settings(L.T("Cài đặt Windows"), "ms-settings:", "\uE713");
+        yield return Settings(L.T("Ứng dụng đã cài (Windows)"), "ms-settings:appsfeatures", "\uE71D");
         foreach (var peer in RustDesk.List().Take(6))
         {
             var id = peer.Id;
-            yield return new CommandItem("RustDesk: " + (peer.Host.Length > 0 ? peer.Host : peer.Id), $"{peer.Id} · {peer.User} · {peer.Platform}" + (peer.Showing ? " · đang xem" : ""), "RustDesk", "\uE703", () => RustDesk.Toggle(id));
+            yield return new CommandItem("RustDesk: " + (peer.Host.Length > 0 ? peer.Host : peer.Id), $"{peer.Id} · {peer.User} · {peer.Platform}" + (peer.Showing ? L.T(" · đang xem") : ""), "RustDesk", "\uE703", () => RustDesk.Toggle(id));
         }
-        yield return new CommandItem("Task Manager", "Quản lý tác vụ", "Windows", "\uE9D9", () => CommandBar.Launch("taskmgr.exe"));
-        yield return new CommandItem("Thư mục Downloads", "", "Thư mục", "\uE896", () => CommandBar.Launch(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads")));
+        yield return new CommandItem("Task Manager", L.T("Quản lý tác vụ"), "Windows", "\uE9D9", () => CommandBar.Launch("taskmgr.exe"));
+        yield return new CommandItem(L.T("Thư mục Downloads"), "", L.T("Thư mục"), "\uE896", () => CommandBar.Launch(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads")));
+    }
+
+    private static void NewStickyNote()
+    {
+        var pad = new ScratchPad { Title = L.F($"Ghi chú {Store.S.Pads.Count + 1}") };
+        Store.S.Pads.Add(pad);
+        NotesSync.EnsureIds();
+        StickyNotes.Show(pad, null);
+        NotesSync.Soon();
     }
 
     /// <summary>Lets a widget's content scroll when the user makes it smaller than its lists.</summary>
@@ -436,6 +465,7 @@ public sealed class App : Application
         _panel?.Close();
         _commandBar?.Close();
         _scratchpad?.Close();
+        StickyNotes.CloseAll();
         CleaningMode.Stop();
         _background?.Dispose();
         _island?.Close();

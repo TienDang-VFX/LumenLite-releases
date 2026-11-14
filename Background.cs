@@ -123,7 +123,7 @@ internal sealed class Background : IDisposable
             {
                 if (Audio.Volume() is { } volume && volume.Level > 0.25f)
                     Audio.SetVolume(0.25f);
-                _island.Notify("", "Đã rút tai nghe, giảm âm lượng còn 25%");
+                _island.Notify("", L.T("Đã rút tai nghe, giảm âm lượng còn 25%"));
             }
             var device = outputs.FirstOrDefault(o => o.Id == current);
             _lastOutputId = current;
@@ -187,17 +187,17 @@ internal sealed class Background : IDisposable
     {
         if (Audio.MicVolume() is not { } mic)
         {
-            _island.Notify("", "Không có micro");
+            _island.Notify("", L.T("Không có micro"));
             return;
         }
         Audio.SetMicMute(!mic.Muted);
-        _island.Notify(mic.Muted ? "" : "", mic.Muted ? "Đã bật micro" : "Đã tắt micro");
+        _island.Notify(mic.Muted ? "" : "", mic.Muted ? L.T("Đã bật micro") : L.T("Đã tắt micro"));
     }
 
     public void NextOutput()
     {
         var name = Audio.NextOutput();
-        _island.Notify("", name == null ? "Không có thiết bị phát" : "Đầu ra: " + name);
+        _island.Notify("", name == null ? L.T("Không có thiết bị phát") : L.T("Đầu ra: ") + name);
     }
 
     // ---------- clean links ----------
@@ -253,7 +253,7 @@ internal sealed class Background : IDisposable
     private void Cleaned()
     {
         _notifyPending = false;
-        _island.Notify("", "Đã bỏ mã theo dõi khỏi link");
+        _island.Notify("", L.T("Đã bỏ mã theo dõi khỏi link"));
     }
 
     /// <summary>The URL without tracking parameters, or null when there was nothing to remove.</summary>
@@ -325,7 +325,7 @@ internal sealed class Background : IDisposable
         if (_announced.TryGetValue(path, out var when) && now - when < TimeSpan.FromSeconds(30))
             return;
         _announced[path] = now;
-        _island.Notify("", "Đã tải xong: " + Path.GetFileName(path), 4);
+        _island.Notify("", L.T("Đã tải xong: ") + Path.GetFileName(path), 4);
     });
 
     private static string? DownloadsFolder()

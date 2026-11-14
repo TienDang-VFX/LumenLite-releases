@@ -31,26 +31,26 @@ internal static class Cleaner
     {
         new CleanCategory
         {
-            Id = "temp", Title = "File tạm của bạn", Glyph = "\uE7C3",
-            Description = "Thư mục %TEMP%, chỉ file cũ hơn 1 ngày",
+            Id = "temp", Title = L.T("File tạm của bạn"), Glyph = "\uE7C3",
+            Description = L.T("Thư mục %TEMP%, chỉ file cũ hơn 1 ngày"),
             Folders = () => new[] { Path.GetTempPath() }, MinAge = TimeSpan.FromDays(1),
         },
         new CleanCategory
         {
-            Id = "wintemp", Title = "File tạm của Windows", Glyph = "\uE770",
-            Description = @"C:\Windows\Temp, phần Windows cho phép xóa",
+            Id = "wintemp", Title = L.T("File tạm của Windows"), Glyph = "\uE770",
+            Description = L.T(@"C:\Windows\Temp, phần Windows cho phép xóa"),
             Folders = () => new[] { Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "Temp") }, MinAge = TimeSpan.FromDays(1),
         },
         new CleanCategory
         {
-            Id = "browsers", Title = "Cache trình duyệt", Glyph = "\uE774",
-            Description = "Chrome, Edge, Brave, Opera, Firefox. Không đụng tới mật khẩu, lịch sử hay cookie",
+            Id = "browsers", Title = L.T("Cache trình duyệt"), Glyph = "\uE774",
+            Description = L.T("Chrome, Edge, Brave, Opera, Firefox. Không đụng tới mật khẩu, lịch sử hay cookie"),
             Folders = BrowserCaches,
         },
         new CleanCategory
         {
-            Id = "shaders", Title = "Cache đồ họa", Glyph = "\uE7F4",
-            Description = "Shader DirectX và NVIDIA/AMD; game sẽ tự tạo lại khi cần",
+            Id = "shaders", Title = L.T("Cache đồ họa"), Glyph = "\uE7F4",
+            Description = L.T("Shader DirectX và NVIDIA/AMD; game sẽ tự tạo lại khi cần"),
             Folders = () => new[]
             {
                 Path.Combine(Local, "D3DSCache"), Path.Combine(Local, "NVIDIA", "DXCache"), Path.Combine(Local, "NVIDIA", "GLCache"),
@@ -60,8 +60,8 @@ internal static class Cleaner
         },
         new CleanCategory
         {
-            Id = "crash", Title = "Báo lỗi và bản dump", Glyph = "\uE7BA",
-            Description = "Bản ghi lỗi app (CrashDumps, Windows Error Reporting)",
+            Id = "crash", Title = L.T("Báo lỗi và bản dump"), Glyph = "\uE7BA",
+            Description = L.T("Bản ghi lỗi app (CrashDumps, Windows Error Reporting)"),
             Folders = () => new[]
             {
                 Path.Combine(Local, "CrashDumps"), Path.Combine(Local, "Microsoft", "Windows", "WER"),

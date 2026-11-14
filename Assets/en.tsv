@@ -1,0 +1,528 @@
+# LumenLite English wording: Vietnamese<TAB>English, one per line. \n = new line, \t = tab, \\ = backslash.
+# A line missing here leaves that text in Vietnamese. {0}, {1}... are values and must stay.
+Thoát LumenLite?	Quit LumenLite?
+Mọi widget, Dynamic Island và phím tắt sẽ tắt cho tới lần mở sau.	All widgets, the Dynamic Island and hotkeys will stay off until the next launch.
+Thoát	Quit
+Ghi chú cũ	Old notes
+Đã tải LumenLite {0}.{1}.{2}: khởi động lại để dùng (Cài đặt hoặc Command Bar)	LumenLite {0}.{1}.{2} downloaded: restart to use it (Settings or Command Bar)
+ · đang xem	 · viewing
+Âm thanh	Sound
+Hệ thống	System
+Ứng dụng	Apps
+Tiện ích	Tools
+Lệnh	Commands
+Cài đặt Windows	Windows Settings
+Mở bảng điều khiển LumenLite	Open the LumenLite panel
+Âm thanh, thiết bị, hệ thống, mạng, ứng dụng…	Sound, devices, system, network, apps…
+Ghi chú nhanh nhiều tab	Quick multi-tab notes
+Ghi chú mới trên màn hình	New note on screen
+Một ghi chú dán, kéo đi đâu cũng được rồi ghim lại	A sticky note you can drag anywhere, then pin again
+UniKey, màn hình, độ sáng	UniKey, displays, brightness
+Đổi kiểu gõ, bật/tắt màn hình, chỉnh độ sáng	Switch typing mode, toggle displays, adjust brightness
+Trộn âm lượng	Volume mixer
+Âm lượng và đầu ra riêng từng app	Volume and output per app
+Khóa máy	Lock PC
+Tắt màn hình	Turn off display
+Rê chuột hoặc bấm phím để bật lại	Move the mouse or press a key to wake it
+Dọn thùng rác	Empty Recycle Bin
+Windows hỏi lại trước khi xóa	Windows asks again before deleting
+Ẩn/hiện icon desktop	Show/hide desktop icons
+Đổi giao diện sáng/tối	Switch light/dark theme
+Đang sáng	Currently light
+Đang tối	Currently dark
+Tắt/bật micro	Toggle microphone
+Chuyển loa/tai nghe	Switch speakers/headphones
+Token và phiên Claude Code	Claude Code tokens and sessions
+CPU, GPU, RAM, cảnh báo	CPU, GPU, RAM, alerts
+Đo tốc độ mạng	Test network speed
+Ping, tải xuống, tải lên	Ping, download, upload
+Dọn dẹp ổ đĩa	Clean up disk
+File tạm, cache trình duyệt, báo lỗi	Temp files, browser cache, crash reports
+Dọn file app nhắn tin	Clean messaging app files
+Thoát app	Quit app
+Thoát một app, tất cả, hoặc tất cả trừ app đang dùng	Quit one app, all, or all except the current one
+Cập nhật app	Update apps
+Gỡ cài đặt app	Uninstall app
+Kèm dọn thư mục còn sót	Also clean up leftover folders
+Cổng mạng đang mở	Open network ports
+Port và tiến trình	Ports and processes
+Khởi động lại để cập nhật LumenLite	Restart to update LumenLite
+Kiểm tra cập nhật LumenLite	Check for LumenLite updates
+Đang dùng {0}	Using {0}
+Lau phím (Cleaning Mode)	Clean keyboard (Cleaning Mode)
+Khóa bàn phím để lau	Lock the keyboard for cleaning
+Chỉnh sửa bố cục widget	Edit widget layout
+Kéo để di chuyển, Esc để xong	Drag to move, Esc when done
+Âm thanh (Windows)	Sound (Windows)
+Màn hình (Windows)	Display (Windows)
+Ứng dụng đã cài (Windows)	Installed apps (Windows)
+Quản lý tác vụ	Task manager
+Thư mục Downloads	Downloads folder
+Thư mục	Folder
+Ghi chú {0}	Note {0}
+Tiến trình {0}	Process {0}
+Đã rút tai nghe, giảm âm lượng còn 25%	Headphones unplugged, volume lowered to 25%
+Không có micro	No microphone
+Đã bật micro	Microphone on
+Đã tắt micro	Microphone off
+Không có thiết bị phát	No playback device
+Đầu ra: 	Output: 
+Đã bỏ mã theo dõi khỏi link	Tracking code removed from link
+Đã tải xong: 	Download complete: 
+Đang lau phím — bàn phím đã khóa	Cleaning keyboard — keyboard is locked
+Bấm nút bên dưới bằng chuột để kết thúc. Tự tắt sau 3 phút.	Click the button below with the mouse to finish. Turns off automatically after 3 minutes.
+Tìm app, lệnh, phép tính, đổi đơn vị, emoji…	Search apps, commands, calculations, unit conversion, emoji…
+↑↓ chọn · Enter mở · Esc đóng	↑↓ select · Enter open · Esc close
+File gần đây	Recent files
+Mở đường dẫn này	Open this path
+Đường dẫn	Path
+Tìm "{0}" trên Google	Search Google for "{0}"
+Mở trình duyệt	Open browser
+Enter để copy kết quả	Enter to copy result
+Máy tính	Calculator
+Enter để copy	Enter to copy
+Đổi đơn vị	Unit conversion
+Enter để copy emoji	Enter to copy emoji
+Màn hình	Display
+vừa xong	just now
+{0} phút trước	{0} min ago
+{0} giờ trước	{0} h ago
+{0} ngày trước	{0} d ago
+Chưa thấy Claude Code hay Codex trên máy này.	Claude Code or Codex not found on this PC.
+Xem đầy đủ trong bảng điều khiển  ›	See full details in the panel  ›
+Mở app Claude để xem hạn mức của gói.	Open the Claude app to see your plan limits.
+Codex chưa báo hạn mức.	Codex hasn't reported limits yet.
+Dùng lần cuối 	Last used 
+Cập nhật 	Updated 
+Phiên	Session
+Tuần	Week
+{0} · đã dùng {1:0}% · còn {2:0}%	{0} · {1:0}% used · {2:0}% left
+ · làm mới {0:HH:mm dd/MM}	 · resets {0:HH:mm dd/MM}
+ (ước tính)	 (estimated)
+7 ngày	7 days
+Hôm nay	Today
+Đổi khoảng thời gian	Change time range
+Chi tiêu	Spend
+giá trị API	API value
+Số tiền nếu trả theo giá API. Gói thuê bao tính khác.	Amount if paid at API prices. Subscription plans are billed differently.
+Có model chưa biết giá nên chưa tính vào; con số thật cao hơn.	Some models have unknown pricing and aren't counted; the real figure is higher.
+ · {0:0}% từ cache	 · {0:0}% from cache
+Bây giờ	Now
+{0} đang chạy	{0} running
+{0} chờ bạn	{0} waiting for you
+Rảnh	Idle
+Không có phiên nào đang chạy hay chờ bạn.	No sessions running or waiting for you.
+Máy 	Machine 
+Cần bạn	Needs you
+Không mở được app {0}	Couldn't open {0}
+Đổi máy	Switch machine
+Âm lượng	Volume
+Từng app	Per app
+Đang phát	Now playing
+Ghi chú	Notes
+Tải về	Downloads
+Lịch	Calendar
+Menu vòng tròn	Radial menu
+Thiết bị	Devices
+Điều khiển	Controls
+ · bấm để mở, bấm lần nữa để thu nhỏ	 · click to open, click again to minimize
+Chưa thấy RustDesk trên máy này.	RustDesk not found on this PC.
+Đang xem	Viewing
+Chuyển	Switch
+RustDesk chưa lưu máy nào.	RustDesk has no saved machines.
+Mở RustDesk  ›	Open RustDesk  ›
+Claude Code đang làm việc	Claude Code is working
+Tắt máy	Shut down
+Bấm lần nữa để tắt	Click again to shut down
+Khởi động lại	Restart
+Bấm lần nữa để khởi động lại	Click again to restart
+Mixer âm lượng	Volume mixer
+Lịch tháng	Month calendar
+Bấm để chuyển loa/tai nghe	Click to switch speakers/headphones
+Không có nhạc đang phát	Nothing playing
+Mở Spotify, YouTube… để điều khiển ở đây	Open Spotify, YouTube… to control it here
+Không có loa	No speakers
+Màn hình không hỗ trợ DDC/CI	Display doesn't support DDC/CI
+Độ sáng mọi màn hình: 	All displays brightness: 
+Tắt	Off
+Không rõ tên bài	Unknown track
+Chọn máy hoặc AI	Choose a machine or AI
+RustDesk chưa lưu máy nào	RustDesk has no saved machines
+Xem trước	Preview
+Ghi chú 1	Note 1
+# Scratchpad\n\nGõ **Markdown** ở đây: `- danh sách`, `## tiêu đề`, `[link](https://…)`.\nTự lưu khi bạn gõ.\n	# Scratchpad\n\nType **Markdown** here: `- list`, `## heading`, `[link](https://…)`.\nSaves automatically as you type.\n
+Dán ghi chú này lên màn hình (hoặc kéo tab ra ngoài cửa sổ)	Paste this note onto the screen (or drag the tab out of the window)
+Ghim nổi trên các cửa sổ khác	Pin on top of other windows
+Bấm đúp để đổi tên	Double-click to rename
+Xóa ghi chú "{0}"?	Delete note "{0}"?
+Sửa	Edit
+Đổi màu	Change color
+Mở trong Scratchpad	Open in Scratchpad
+Ghim: giữ nguyên chỗ và nổi trên các cửa sổ khác	Pin: stay in place and float above other windows
+Gỡ khỏi màn hình (ghi chú vẫn còn trong Scratchpad)	Remove from screen (the note stays in Scratchpad)
+Mở bảng điều khiển  (	Open control panel  (
+chuột trái	left click
+Island luôn hiện viên nhỏ	Island always shows the small pill
+Bỏ mã theo dõi khỏi link khi copy	Strip tracking codes from links when copying
+Báo khi tải xong file	Notify when a download finishes
+Phím tắt	Shortcuts
+Tắt/bật micro: 	Toggle microphone: 
+bị app khác chiếm	in use by another app
+Đổi đầu ra âm thanh: 	Switch audio output: 
+Đưa tất cả lên trên	Bring all to front
+Chỉnh sửa bố cục	Edit layout
+Khởi động cùng Windows	Start with Windows
+Đang chạy	Running
+Theo model · hôm nay	By model · today
+Phiên · bấm để mở	Sessions · click to open
+Chưa thấy Claude Code trên máy này (thư mục %USERPROFILE%\\.claude\\projects). Codex, Copilot hay OpenCode cũng chưa có log để đọc.	Claude Code not found on this PC (folder %USERPROFILE%\\.claude\\projects). No logs to read for Codex, Copilot or OpenCode yet either.
+Đọc từ log Claude Code trên máy, không gửi dữ liệu đi đâu. Log không ghi giới hạn gói hay thời điểm reset, nên mục đó không có. Token gồm vào, ra, ghi cache và đọc cache.	Read from Claude Code logs on this PC; no data is sent anywhere. Logs don't record plan limits or reset times, so those aren't shown. Tokens include input, output, cache writes and cache reads.
+Thông báo	Notifications
+Báo khi Claude xong việc	Notify when Claude finishes
+Dynamic Island báo khi một phiên chạy hơn 1 phút rồi xong lượt.	Dynamic Island notifies you when a session runs for over 1 minute and then finishes its turn.
+Hiện trên Island khi đang chạy	Show on Island while running
+Viên Island hiện biểu tượng ✳ và số phiên đang làm việc.	The Island pill shows the ✳ icon and the number of working sessions.
+Hôm nay chưa dùng.	No usage today.
+vào {0} · ra {1} · ghi cache {2} · đọc cache {3}	in {0} · out {1} · cache write {2} · cache read {3}
+Không có phiên nào trong 12 giờ qua.	No sessions in the past 12 hours.
+Đang chờ bạn	Waiting for you
+Dọn	Clean
+File đang được dùng sẽ được bỏ qua. Trình duyệt đang mở có thể giữ lại một phần cache.	Files in use are skipped. An open browser may keep part of its cache.
+Tự động	Automatic
+Tự dọn mỗi tuần	Auto-clean every week
+File tạm của bạn và báo lỗi, chạy nền khi mở LumenLite	Your temp files and error reports, runs in the background when LumenLite opens
+Dọn dẹp	Cleanup
+Đang quét…	Scanning…
+Sạch	Clean
+Không có gì để dọn	Nothing to clean
+Dọn {0}	Clean {0}
+Xóa {0}?	Delete {0}?
+Các file này bị xóa hẳn, không vào Thùng rác: 	These files are permanently deleted, not sent to the Recycle Bin: 
+Xóa	Delete
+Đang dọn…	Cleaning…
+Đã giải phóng {0}.	Freed {0}.
+Chọn file cũ hơn	Choose files older than
+File được chuyển vào Thùng rác, nên vẫn khôi phục được.	Files are moved to the Recycle Bin, so you can still restore them.
+File từ app nhắn tin	Files from messaging apps
+1 năm	1 year
+ ngày	 days
+{0} ngày	{0} days
+Không thấy thư mục nhận file của Zalo, Telegram, Messenger, Discord hay Viber.	No download folder found for Zalo, Telegram, Messenger, Discord or Viber.
+Bỏ file cũ	Remove old files
+Chuyển {0} file vào Thùng rác?	Move {0} files to the Recycle Bin?
+{0} file {1} cũ hơn {2} trong {3}.	{0} of {1} files older than {2} in {3}.
+Đã chuyển {0} file vào Thùng rác.	Moved {0} files to the Recycle Bin.
+Mở thư mục	Open folder
+Cũ hơn {0}	Older than {0}
+Không có	None
+Thoát tất cả	Quit all
+Trừ app đang dùng	Except the app in use
+Quản lý app	App manager
+Tìm bản mới cho app đã cài qua winget, cập nhật từng app hoặc tất cả	Find updates for apps installed via winget; update one app or all of them
+Gỡ cài đặt	Uninstall
+Gỡ app rồi dọn thư mục nó để lại trong AppData và ProgramData	Uninstall an app, then clean the folders it leaves behind in AppData and ProgramData
+Cổng mạng	Network ports
+Xem tiến trình nào đang mở port và dừng nó	See which process has a port open and stop it
+Ứng dụng đang mở	Open apps
+Không có app nào đang mở cửa sổ.	No apps have a window open.
+  · đang dùng	  · in use
+Đã yêu cầu {0} đóng.	Asked {0} to close.
+Thoát {0} app, giữ app đang dùng?	Quit {0} apps, keeping the app in use?
+Thoát {0} app?	Quit {0} apps?
+Mỗi app được yêu cầu đóng như khi bấm dấu X, nên app nào có việc chưa lưu sẽ hỏi bạn trước.	Each app is asked to close as if you clicked the X, so any app with unsaved work will ask you first.
+Cập nhật tất cả	Update all
+Cập nhật tất cả?	Update all?
+winget sẽ tải và cài từng bản mới trong một cửa sổ riêng. Một số app cần bạn bấm đồng ý quyền admin.	winget will download and install each update in its own window. Some apps need you to approve admin permission.
+Cập nhật	Update
+Kiểm tra lại	Check again
+Máy chưa có winget. Cài "App Installer" từ Microsoft Store để dùng mục này.	winget isn't installed on this PC. Install "App Installer" from the Microsoft Store to use this.
+Đang hỏi winget (có thể mất 10–30 giây)…	Asking winget (may take 10–30 seconds)…
+Không kiểm tra được: 	Couldn't check: 
+Mọi app winget biết đều đã mới nhất.	All apps winget knows about are up to date.
+{0} app có bản mới	{0} apps have updates
+Tìm app đã cài…	Search installed apps…
+Đang đọc danh sách app…	Reading app list…
+Còn {0} app nữa, gõ tên để tìm.	{0} more apps, type a name to search.
+Không có app nào khớp.	No matching apps.
+Gỡ	Uninstall
+Gỡ {0}?	Uninstall {0}?
+Trình gỡ của chính app sẽ mở ra. Gỡ xong, LumenLite tìm thư mục nó để lại và hỏi bạn có muốn bỏ vào Thùng rác không.	The app's own uninstaller will open. Once it finishes, LumenLite looks for the folders it left behind and asks if you want to move them to the Recycle Bin.
+Không mở được trình gỡ: 	Couldn't open the uninstaller: 
+Đã gỡ {0}, không còn thư mục sót lại.	Uninstalled {0}, no leftover folders.
+Dọn {0} thư mục còn sót?	Clean {0} leftover folders?
+Bỏ vào Thùng rác	Move to Recycle Bin
+Đã chuyển {0} thư mục vào Thùng rác.	Moved {0} folders to the Recycle Bin.
+Làm mới	Refresh
+Không đọc được: 	Couldn't read: 
+Không có cổng nào đang lắng nghe.	No ports are listening.
+Dừng	Stop
+Dừng {0}?	Stop {0}?
+Tiến trình PID {0} đang mở cổng {1} sẽ bị buộc tắt ngay, việc chưa lưu sẽ mất.	Process PID {0} has port {1} open and will be force-closed immediately; any unsaved work will be lost.
+Đã dừng {0}.	Stopped {0}.
+Không dừng được (có thể cần quyền admin): 	Couldn't stop (may need admin permission): 
+Đầu ra	Output
+Ctrl+Alt+M: tắt/bật	Ctrl+Alt+M: toggle
+Chưa có app nào phát âm thanh.	No app is playing audio yet.
+Âm thanh hệ thống	System sounds
+Mặc định	Default
+Mặc định (theo Windows)	Default (follow Windows)
+Đổi đầu ra của một app có hiệu lực khi app phát lại (nhiều app cần tạm dừng rồi phát tiếp).	Changing an app's output takes effect when the app plays again (many apps need to pause, then resume).
+Windows không cho đổi đầu ra của app này.	Windows doesn't allow changing this app's output.
+Giảm âm lượng khi rút tai nghe	Lower volume when headphones are unplugged
+Hạ về 25% để loa ngoài không phát quá to	Drops to 25% so the speakers don't blast
+Chuyển nhanh	Quick switch
+Không có micro nào đang cắm.	No microphone is plugged in.
+(đang rút)	(unplugged)
+Không	None
+Không ưu tiên (theo Windows)	No preference (follow Windows)
+Micro ưu tiên	Preferred microphone
+Tự dùng micro này mỗi khi nó được cắm	Automatically use this microphone whenever it's plugged in
+Đang dùng	In use
+Độ sáng	Brightness
+UniKey chưa chạy	UniKey isn't running
+Mở UniKey để đổi kiểu gõ ở đây.	Open UniKey to change the typing method here.
+UniKey: Tiếng Việt	UniKey: Vietnamese
+Kiểu gõ UniKey	UniKey typing method
+Biểu tượng UniKey đang ở khay ẩn; bấm để đổi, LumenLite sẽ biết kiểu mới.	The UniKey icon is in the hidden tray; click to change it and LumenLite will pick up the new method.
+Bật là gõ tiếng Việt, tắt là gõ English. Giống bấm biểu tượng UniKey.	On types Vietnamese, off types English. Same as clicking the UniKey icon.
+Đang tắt	Off
+Màn hình chính	Main display
+Đang bật	On
+ · không thể tắt màn hình cuối cùng	 · can't turn off the last display
+Không tìm thấy màn hình.	Display not found.
+Cài đặt màn hình của Windows	Windows display settings
+bật	turn on
+tắt	turn off
+Windows không {0} được {1} (mã {2}). Thử trong Cài đặt màn hình.	Windows couldn't {0} {1} (code {2}). Try Display settings.
+Đang hỏi màn hình…	Asking the display…
+Không màn hình nào nhận lệnh độ sáng. Bật DDC/CI trong menu của màn hình rời; màn hình laptop chưa hỗ trợ.	No display accepted the brightness command. Turn on DDC/CI in the external monitor's menu; laptop displays aren't supported.
+Áp lực RAM	Memory pressure
+Mức sử dụng phần cứng	Hardware usage
+Bộ nhớ	Memory
+Cảnh báo	Warning
+CPU tải cao	High CPU load
+Trên 90% liên tục 1 phút	Above 90% for 1 minute straight
+Thiếu RAM	Low on RAM
+Dùng trên 92% bộ nhớ	Using over 92% of memory
+Ổ C sắp đầy	C: drive almost full
+Còn dưới 10 GB hoặc dưới 5%	Under 10 GB or under 5% left
+Pin yếu	Low battery
+Còn 20% và không cắm sạc	20% left and not charging
+Cảnh báo hiện trên Dynamic Island và thông báo Windows, mỗi loại tối đa 30 phút một lần. Windows không cho đọc nhiệt độ hay tốc độ quạt nếu không cài driver riêng.	Alerts appear on the Dynamic Island and as Windows notifications, each at most once every 30 minutes. Windows doesn't expose temperature or fan speed without a separate driver.
+Chỉ số trên Dynamic Island	Stats on the Dynamic Island
+Hiện ngay trên viên Island lúc rảnh, giống chỉ số trên thanh menu của Mac.	Shown on the Island pill when idle, like the stats in the Mac menu bar.
+Mạng ↓↑	Network ↓↑
+Bình thường	Normal
+Rất cao	Very high
+Máy đã chạy 	Up for 
+Tải xuống	Download
+Tải lên	Upload
+Độ trễ	Latency
+Xuống	Down
+Lên	Up
+Đo qua speed.cloudflare.com, tốn khoảng 50–150 MB dữ liệu.	Measured via speed.cloudflare.com, uses about 50–150 MB of data.
+Bắt đầu đo	Start test
+IP nội bộ	Local IP
+Đã tải xuống (từ khi mở app)	Downloaded (since app launch)
+Đã tải lên (từ khi mở app)	Uploaded (since app launch)
+Mạng	Network
+Không có mạng	No network
+Tải xuống {0:0} Mbps, tải lên {1:0} Mbps (đơn vị ô: Mbps). Đo lúc {2:HH:mm}.	Download {0:0} Mbps, upload {1:0} Mbps (tile unit: Mbps). Measured at {2:HH:mm}.
+Đã dừng.	Stopped.
+Không đo được: 	Couldn't measure: 
+Đo lại	Test again
+File tạm, cache trình duyệt, cache đồ họa và báo lỗi	Temp files, browser cache, graphics cache and error reports
+Zalo, Telegram, Messenger… gom ảnh và file nhận được qua thời gian	Zalo, Telegram, Messenger… collect the photos and files you've received over time
+Thùng rác	Recycle Bin
+Lưu trữ	Storage
+Ổ đĩa	Drives
+còn {0} / {1}	{0} / {1} free
+Trống	Empty
+{0} mục · {1} · bấm để dọn	{0} items · {1} · click to clean
+Tìm và mở app, tính toán, đổi đơn vị, tìm emoji và chạy mọi lệnh của LumenLite từ một ô.	Find and open apps, calculate, convert units, find emojis and run any LumenLite command from one box.
+Bảng này: mở từ bất cứ đâu bằng phím tắt.	This panel: open it from anywhere with a hotkey.
+Vòng nút quanh con trỏ chuột: mở trang AI Agents hoặc màn hình từng máy RustDesk.	Ring of buttons around the mouse pointer: open the AI Agents page or each RustDesk machine's screen.
+Ghi chú nhanh nhiều tab, có xem trước Markdown, tự lưu.	Quick multi-tab notes with Markdown preview, saved automatically.
+Khóa bàn phím và tắt sáng màn hình để lau máy an toàn.	Lock the keyboard and turn off the screen to clean your PC safely.
+Làm sạch link	Clean links
+Bỏ mã theo dõi (utm, fbclid, si…) khỏi link khi bạn copy.	Strip tracking codes (utm, fbclid, si…) from links when you copy them.
+Báo tải xong	Download alerts
+Dynamic Island báo khi một file tải về xong trong Downloads.	Dynamic Island notifies you when a file finishes downloading in Downloads.
+Nhạc, điều khiển và thông báo ở giữa mép trên màn hình.	Music, controls and notifications at the top center of the screen.
+Luôn hiện viên nhỏ	Always show the pill
+Tắt đi thì Island chỉ hiện khi có nhạc, hẹn giờ hay thông báo.	When off, the Island only appears for music, timers or notifications.
+Vị trí	Position
+Mép màn hình Island bám vào. Cũng đổi được bằng cách giữ và kéo Island tới mép trái, phải hoặc trên.	Screen edge the Island attaches to. You can also change it by holding and dragging the Island to the left, right or top edge.
+Trên	Top
+Trái	Left
+Phải	Right
+Bật/tắt nhanh	Quick toggles
+Giao diện sáng	Light theme
+Giao diện tối	Dark theme
+Bấm để đổi	Click to switch
+Đang hiện	Shown
+Đang ẩn	Hidden
+Rê chuột để bật	Hover to turn on
+Lau phím	Clean keys
+Khóa bàn phím	Lock keyboard
+Sáng	Light
+Tối	Dark
+Tiếng Việt	Vietnamese
+Kiểm tra ngay	Check now
+Phiên bản {0}. 	Version {0}. 
+Tự kiểm tra 1 phút sau khi mở app, rồi 6 giờ một lần.	Checks automatically 1 minute after the app opens, then every 6 hours.
+Khởi động lại để cập nhật	Restart to update
+Giao diện	Appearance
+Ngôn ngữ · Language	Language
+Đổi ngôn ngữ sẽ khởi động lại LumenLite.	Changing the language restarts LumenLite.
+Mở LumenLite khi bạn đăng nhập.	Open LumenLite when you sign in.
+Tiết kiệm bộ nhớ	Memory saver
+Vẽ bằng CPU thay vì GPU: ít RAM hơn nhưng hiệu ứng kém mượt. Có hiệu lực từ lần mở app tiếp theo.	Renders with the CPU instead of the GPU: less RAM but effects are less smooth. Takes effect the next time the app opens.
+Tự cập nhật	Auto-update
+Tải bản mới từ GitHub ({0}) và dùng từ lần mở app tiếp theo.	Downloads new versions from GitHub ({0}) and uses them the next time the app opens.
+Bản tự build không tự cập nhật. Phát hành bằng release.ps1 để bật.	Self-built versions don't auto-update. Publish with release.ps1 to enable.
+Mở bảng này	Open this panel
+Đổi loa/tai nghe	Switch speaker/headphones
+Khi một phím đã bị app khác giữ, LumenLite dùng thêm Shift. Cài đặt lưu ở %APPDATA%\\LumenLite.	When a key is already taken by another app, LumenLite adds Shift. Settings are saved in %APPDATA%\\LumenLite.
+Cài đặt	Settings
+bị app khác giữ	taken by another app
+Nút trên vòng	Ring buttons
+Vòng gồm trang AI Agents trên Island và từng máy RustDesk đã lưu (tối đa 7). Bấm một máy để mở màn hình của máy đó trong RustDesk.	The ring has the AI Agents page on the Island plus each saved RustDesk machine (up to 7). Click a machine to open its screen in RustDesk.
+Cách dùng	How to use
+phím tắt	hotkey
+Giữ chuột giữa (hoặc nhấn {0}), vòng nút hiện quanh con trỏ. Rê về phía một nút rồi thả chuột giữa, hoặc bấm vào nút. Phím 1–8 chạy nút theo thứ tự. Esc hay bấm giữa vòng để đóng.	Hold the middle mouse button (or press {0}) and the ring of buttons appears around the pointer. Move toward a button and release the middle button, or click a button. Keys 1–8 run buttons in order. Esc or clicking the ring's center closes it.
+Giữ chuột giữa để mở	Hold middle mouse button to open
+Bấm chuột giữa nhanh vẫn hoạt động như cũ (mở tab mới, cuộn). Tự tắt khi chơi game hay xem video toàn màn hình.	A quick middle click still works as usual (open new tab, scroll). Turns off automatically in games and fullscreen video.
+Hủy	Cancel
+Phiên 	Session 
+Đang chờ bạn trong app Codex	Waiting for you in the Codex app
+Đang chờ bạn trong app Claude	Waiting for you in the Claude app
+Đang đọc yêu cầu: 	Reading the request: 
+Đã xong lượt	Turn finished
+Chờ bạn duyệt kế hoạch	Waiting for you to approve the plan
+Đang hỏi bạn	Asking you
+Đang suy nghĩ	Thinking
+Chạy lệnh	Running a command
+Đọc	Reading
+Viết	Writing
+Tìm	Searching
+Giao việc cho agent	Delegating to agent
+Cập nhật kế hoạch	Updating plan
+Dùng công cụ 	Using tool 
+Mở trong app {0}	Open in {0} app
+Mở màn hình máy {0} trong RustDesk ({1}), bấm lần nữa để thu nhỏ	Open machine {0}'s screen in RustDesk ({1}), click again to minimize
+Mở qua Remote Control (phiên chạy trên máy {0})	Open via Remote Control (session running on machine {0})
+Chưa biết máy {0} trong RustDesk: mở RustDesk	Machine {0} not known in RustDesk yet: open RustDesk
+Chưa biết máy {0} trong RustDesk	Machine {0} not known in RustDesk yet
+Không tìm thấy winget (App Installer).	winget (App Installer) not found.
+File tạm của bạn	Your temp files
+Thư mục %TEMP%, chỉ file cũ hơn 1 ngày	The %TEMP% folder, only files older than 1 day
+File tạm của Windows	Windows temp files
+C:\\Windows\\Temp, phần Windows cho phép xóa	C:\\Windows\\Temp, the part Windows allows deleting
+Cache trình duyệt	Browser cache
+Chrome, Edge, Brave, Opera, Firefox. Không đụng tới mật khẩu, lịch sử hay cookie	Chrome, Edge, Brave, Opera, Firefox. Doesn't touch passwords, history or cookies
+Cache đồ họa	Graphics cache
+Shader DirectX và NVIDIA/AMD; game sẽ tự tạo lại khi cần	DirectX and NVIDIA/AMD shaders; games recreate them when needed
+Báo lỗi và bản dump	Error reports and dumps
+Bản ghi lỗi app (CrashDumps, Windows Error Reporting)	App error logs (CrashDumps, Windows Error Reporting)
+Không tìm thấy RustDesk.	RustDesk not found.
+Đang đo độ trễ…	Measuring latency…
+Đang đo tốc độ tải xuống…	Measuring download speed…
+Đang đo tốc độ tải lên…	Measuring upload speed…
+CPU đã chạy trên 90% suốt 1 phút	CPU has been above 90% for 1 minute
+RAM gần đầy: {0:0}% đang dùng	RAM almost full: {0:0}% in use
+Ổ C sắp đầy: còn {0:0.0} GB	C: drive almost full: {0:0.0} GB left
+Pin yếu: còn {0:0}%	Low battery: {0:0}% left
+{0} ngày {1} giờ	{0} days {1} hours
+{0} giờ {1} phút	{0} hours {1} minutes
+Bản tự build: tự cập nhật đã tắt.	Self-built version: auto-update is off.
+Đang kiểm tra…	Checking…
+Chưa có bản phát hành nào.	No releases yet.
+GitHub trả lời {0}.	GitHub responded with {0}.
+Đang dùng bản mới nhất ({0}).	You're on the latest version ({0}).
+Bản {0} chưa có file {1}.	Version {0} has no {1} file.
+Đang tải bản {0}…	Downloading version {0}…
+Không cập nhật được: 	Couldn't update: 
+Không biết file LumenLite đang chạy.	Can't tell which LumenLite file is running.
+file tải về không đủ dung lượng	downloaded file is too small
+bản phát hành không có mã kiểm tra SHA-256	release has no SHA-256 checksum
+file tải về không khớp mã kiểm tra của GitHub	downloaded file doesn't match GitHub's checksum
+file tải về không phải LumenLite {0}	downloaded file isn't LumenLite {0}
+Đã tải bản {0}. Khởi động lại LumenLite để dùng.	Downloaded version {0}. Restart LumenLite to use it.
+Kéo thả app, thư mục, file hoặc link vào đây	Drag and drop apps, folders, files or links here
+Mở vị trí	Open location
+Xóa khỏi launcher	Remove from launcher
+Không mở được "{0}".\n\n{1}	Couldn't open "{0}".\n\n{1}
+Tắt/bật tiếng	Mute/unmute
+Qua winget	Via winget
+Nay	Today
+Theo Windows	System
+Chung	General
+Micro	Microphone
+Đồng bộ ghi chú với GitHub	Sync notes with GitHub
+Thiết lập repo và token	Set up a repo and token
+Đồng bộ lần cuối lúc {0:HH:mm dd/MM}	Last synced at {0:HH:mm dd/MM}
+Đang đồng bộ…	Syncing…
+GitHub liên tục có thay đổi mới, sẽ thử lại sau.	GitHub keeps getting new changes; will try again later.
+Không đồng bộ được: 	Sync failed: 
+{0} (xung đột từ {1})	{0} (conflict from {1})
+{0} mới	{0} added
+{0} sửa	{0} updated
+{0} xóa	{0} deleted
+Ghi chú từ {0}: {1}	Notes from {0}: {1}
+nhận {0}	received {0}
+gửi {0}	sent {0}
+{0} xung đột	{0} conflicts
+Đã đồng bộ lúc {0}, không có gì mới.	Synced at {0}, nothing new.
+Đã đồng bộ lúc {0}: {1}.	Synced at {0}: {1}.
+Ghi chú Scratchpad của LumenLite, đồng bộ giữa các máy. Mỗi ghi chú là một file; lịch sử commit giữ mọi lần sửa.	LumenLite Scratchpad notes, synced between PCs. Each note is one file; the commit history keeps every edit.
+Token này chỉ đọc được repo. Cần quyền Contents: Read and write.	This token can only read the repo. It needs Contents: Read and write.
+Đã kết nối repo riêng tư.	Connected to the private repo.
+Đã kết nối. Lưu ý: repo này công khai, ai cũng đọc được ghi chú.	Connected. Note: this repo is public, so anyone can read the notes.
+Token sai hoặc đã hết hạn.	The token is wrong or has expired.
+Không thấy repo (sai tên, hoặc token không được cấp quyền vào repo này).	Repo not found (wrong name, or the token has no access to it).
+GitHub từ chối: 	GitHub refused: 
+Lịch sử ghi chú này trên GitHub	This note's history on GitHub
+tên-bạn/lumenlite-notes	your-name/lumenlite-notes
+Kết nối và đồng bộ	Connect and sync
+Đồng bộ ngay	Sync now
+Lịch sử trên GitHub	History on GitHub
+Mọi lần sửa ghi chú là một commit; xem và khôi phục bản cũ trên GitHub.	Every note edit is a commit; view and restore old versions on GitHub.
+Cách thiết lập	Setup
+1. Tạo một repo riêng tư (private) trên GitHub để chứa ghi chú.\n2. Tạo fine-grained token: chỉ chọn repo đó, quyền Contents: Read and write.\n3. Dán tên repo và token vào dưới rồi bấm Kết nối. Làm vậy trên mỗi máy dùng chung ghi chú.	1. Create a private repo on GitHub to hold the notes.\n2. Create a fine-grained token: select only that repo, with Contents: Read and write.\n3. Paste the repo name and token below, then press Connect. Do this on every PC that shares the notes.
+Tạo repo riêng tư	Create a private repo
+Tạo token trên GitHub	Create a token on GitHub
+Repo (chủ/tên)	Repo (owner/name)
+Nhánh	Branch
+Đồng bộ	Sync
+Tự đồng bộ	Auto sync
+15 giây sau khi bạn ngừng gõ, mỗi 3 phút và khi mở app.	15 seconds after you stop typing, every 3 minutes, and when the app opens.
+Ngắt kết nối	Disconnect
+Xóa token trên máy này. Ghi chú vẫn còn ở đây và trên GitHub.	Removes the token from this PC. Notes stay here and on GitHub.
+Ngắt kết nối GitHub?	Disconnect GitHub?
+Token trên máy này sẽ bị xóa và ghi chú ngừng đồng bộ. Không xóa gì trên GitHub.	The token on this PC is removed and notes stop syncing. Nothing is deleted on GitHub.
+Đồng bộ ghi chú	Notes sync
+Cần tên repo dạng chủ/tên và token.	Enter a repo as owner/name and a token.
+Đang kiểm tra repo và token…	Checking the repo and token…
+Chưa kết nối.	Not connected.
+Đã kết nối, chưa đồng bộ lần nào.	Connected, not synced yet.
+Đã tắt tự đồng bộ.	Auto sync is off.
+Đã lưu (dán token mới để thay)	Saved (paste a new token to replace it)
+Đồng bộ với GitHub	Sync with GitHub
+Dùng chung ghi chú trên mọi máy, có lịch sử phiên bản.	Share notes across all your PCs, with version history.
+GitHub CLI chưa đăng nhập (chạy gh auth login).	GitHub CLI is not signed in (run gh auth login).
+Chưa có token.	No token yet.
+Chưa cài GitHub CLI (gh). Cài bằng: winget install GitHub.cli	GitHub CLI (gh) is not installed. Install it with: winget install GitHub.cli
+GitHub CLI chưa đăng nhập. Chạy: gh auth login	GitHub CLI is not signed in. Run: gh auth login
+Không biết tài khoản GitHub của gh.	Couldn't tell which GitHub account gh uses.
+Không thấy repo {0}. Thêm --create để tạo repo riêng tư.	Repo {0} not found. Add --create to create it as a private repo.
+Không tạo được repo: 	Couldn't create the repo: 
+Đồng bộ với {0} qua GitHub CLI. {1}	Syncing with {0} through GitHub CLI. {1}
+Dùng GitHub CLI (gh) trên máy này	Use GitHub CLI (gh) on this PC
+Không cần dán token: dùng đăng nhập của gh, tạo repo riêng tư nếu chưa có (tên ở ô Repo, mặc định tin-notes).	No token to paste: uses gh's sign-in and creates the private repo if needed (name from the Repo box, tin-notes by default).
+Nhanh nhất	Quickest
+Đang thiết lập qua GitHub CLI…	Setting up through GitHub CLI…
+Đã kết nối qua GitHub CLI.	Connected through GitHub CLI.
+Dùng đăng nhập GitHub CLI (dán token để thay)	Using GitHub CLI sign-in (paste a token to replace it)
+Chưa cài GitHub CLI (gh).	GitHub CLI (gh) is not installed.
+GitHub CLI không trả lời.	GitHub CLI did not respond.

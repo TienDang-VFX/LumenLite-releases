@@ -220,7 +220,7 @@ internal static class AppManager
 
     private static async Task<string> RunWingetAsync(string args)
     {
-        var winget = FindWinget() ?? throw new InvalidOperationException("Không tìm thấy winget (App Installer).");
+        var winget = FindWinget() ?? throw new InvalidOperationException(L.T("Không tìm thấy winget (App Installer)."));
         var info = new ProcessStartInfo(winget, args)
         {
             UseShellExecute = false,

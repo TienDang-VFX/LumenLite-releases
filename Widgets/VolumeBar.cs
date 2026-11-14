@@ -60,7 +60,7 @@ public sealed class VolumeBar : Grid
             ? Material.Display.Pressable(content, ToggleMute, new Thickness(6))
             : new Border { Child = content, Padding = new Thickness(6) };
         button.Margin = new Thickness(-6, 0, 0, 0);
-        button.ToolTip = tooltip ?? (setMute != null ? "Tắt/bật tiếng" : null);
+        button.ToolTip = tooltip ?? (setMute != null ? L.T("Tắt/bật tiếng") : null);
         Children.Add(button);
 
         _track.Children.Add(new Border { Height = 2, Background = Material.Display.Track });
@@ -174,6 +174,6 @@ public sealed class VolumeBar : Grid
             _icon.Text = _muted || (_level == 0 && _setMute != null) ? _mutedGlyph : _glyph;
         if (_customIcon != null)
             _customIcon.Opacity = _muted ? 0.35 : 1;
-        _percent.Text = _muted ? "Tắt" : $"{Math.Round(_level * 100)}%";
+        _percent.Text = _muted ? L.T("Tắt") : $"{Math.Round(_level * 100)}%";
     }
 }

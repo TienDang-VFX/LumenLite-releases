@@ -16,12 +16,12 @@ internal static class AgentOpen
     {
         var app = AgentMonitor.Name(session.Provider);
         if (session.Machine.Length == 0)
-            return $"Mở trong app {app}";
+            return L.F($"Mở trong app {app}");
         if (Peer(session) is { } peer)
-            return $"Mở màn hình máy {session.Machine} trong RustDesk ({(peer.Host.Length > 0 ? peer.Host : peer.Id)}), bấm lần nữa để thu nhỏ";
+            return L.F($"Mở màn hình máy {session.Machine} trong RustDesk ({(peer.Host.Length > 0 ? peer.Host : peer.Id)}), bấm lần nữa để thu nhỏ");
         return session.OpenUrl.Length > 0
-            ? $"Mở qua Remote Control (phiên chạy trên máy {session.Machine})"
-            : $"Chưa biết máy {session.Machine} trong RustDesk: mở RustDesk";
+            ? L.F($"Mở qua Remote Control (phiên chạy trên máy {session.Machine})")
+            : L.F($"Chưa biết máy {session.Machine} trong RustDesk: mở RustDesk");
     }
 
     /// <summary>Said when another machine's session has no RustDesk machine and no Remote Control to open it.</summary>
@@ -39,7 +39,7 @@ internal static class AgentOpen
             else
             {
                 // Better a word than RustDesk's home page: nothing here says which machine it is.
-                Unknown?.Invoke($"Chưa biết máy {session.Machine} trong RustDesk");
+                Unknown?.Invoke(L.F($"Chưa biết máy {session.Machine} trong RustDesk"));
                 RustDesk.OpenApp();
             }
             return true;

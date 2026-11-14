@@ -65,7 +65,7 @@ internal static class CleaningMode
             panel.Children.Add(icon);
             panel.Children.Add(new TextBlock
             {
-                Text = "Đang lau phím — bàn phím đã khóa",
+                Text = L.T("Đang lau phím — bàn phím đã khóa"),
                 FontSize = 22,
                 FontWeight = FontWeights.SemiBold,
                 Foreground = Material.Display.Text,
@@ -74,7 +74,7 @@ internal static class CleaningMode
             });
             panel.Children.Add(new TextBlock
             {
-                Text = "Bấm nút bên dưới bằng chuột để kết thúc. Tự tắt sau 3 phút.",
+                Text = L.T("Bấm nút bên dưới bằng chuột để kết thúc. Tự tắt sau 3 phút."),
                 FontSize = 13,
                 Foreground = Material.Display.Secondary,
                 HorizontalAlignment = HorizontalAlignment.Center,

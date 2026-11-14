@@ -16,7 +16,7 @@ public sealed class LauncherView : DockPanel
     private readonly WrapPanel _tiles = new();
     private readonly TextBlock _hint = new()
     {
-        Text = "Kéo thả app, thư mục, file hoặc link vào đây",
+        Text = L.T("Kéo thả app, thư mục, file hoặc link vào đây"),
         Foreground = Material.Display.Secondary,
         FontSize = 13,
         TextWrapping = TextWrapping.Wrap,
@@ -64,7 +64,7 @@ public sealed class LauncherView : DockPanel
         {
             new() { Name = "File Explorer", Target = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe") },
             new() { Name = "Downloads", Target = downloads },
-            new() { Name = "Cài đặt", Target = "ms-settings:" },
+            new() { Name = L.T("Cài đặt"), Target = "ms-settings:" },
         };
     }
 
@@ -123,9 +123,9 @@ public sealed class LauncherView : DockPanel
         tile.ToolTip = item.Target;
 
         var menu = new ContextMenu();
-        var open = new MenuItem { Header = "Mở vị trí" , IsEnabled = File.Exists(item.Target) || Directory.Exists(item.Target) };
+        var open = new MenuItem { Header = L.T("Mở vị trí") , IsEnabled = File.Exists(item.Target) || Directory.Exists(item.Target) };
         open.Click += (_, _) => Start("explorer.exe", $"/select,\"{item.Target}\"");
-        var remove = new MenuItem { Header = "Xóa khỏi launcher" };
+        var remove = new MenuItem { Header = L.T("Xóa khỏi launcher") };
         remove.Click += (_, _) =>
         {
             Items.Remove(item);
@@ -155,7 +155,7 @@ public sealed class LauncherView : DockPanel
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Không mở được \"{target}\".\n\n{ex.Message}", "LumenLite", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(L.F($"Không mở được \"{target}\".\n\n{ex.Message}"), "LumenLite", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 

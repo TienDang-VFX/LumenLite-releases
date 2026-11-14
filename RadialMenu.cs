@@ -182,7 +182,7 @@ internal sealed class RadialMenu : Window
             button.BorderThickness = new Thickness(action.Active && !on ? 2 : 1);
             icon.Foreground = on ? Material.Display.OnAccent : action.Tint;
         }
-        _centerLabel.Text = index >= 0 ? _items[index].Action.Label : _items.Count > 0 ? "Chọn máy hoặc AI" : "RustDesk chưa lưu máy nào";
+        _centerLabel.Text = index >= 0 ? _items[index].Action.Label : _items.Count > 0 ? L.T("Chọn máy hoặc AI") : L.T("RustDesk chưa lưu máy nào");
         _centerLabel.Foreground = index >= 0 ? Material.Display.Text : Faint;
     }
 

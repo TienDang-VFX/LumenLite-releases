@@ -11,27 +11,27 @@ namespace LumenLite.Panel;
 /// <summary>Claude Code on this machine: tokens today and this week, per model, and the sessions running now.</summary>
 internal sealed class AgentsPage : Page
 {
-    private readonly Readout _today = new("\uE823", "Hôm nay");
-    private readonly Readout _week = new("\uE787", "7 ngày");
-    private readonly Readout _running = new("\uE768", "Đang chạy");
+    private readonly Readout _today = new("\uE823", L.T("Hôm nay"));
+    private readonly Readout _week = new("\uE787", L.T("7 ngày"));
+    private readonly Readout _running = new("\uE768", L.T("Đang chạy"));
     private readonly Grid _chart = new() { Height = 70 };
-    private readonly Group _models = Ui.Group("Theo model · hôm nay");
-    private readonly Group _sessions = Ui.Group("Phiên · bấm để mở");
+    private readonly Group _models = Ui.Group(L.T("Theo model · hôm nay"));
+    private readonly Group _sessions = Ui.Group(L.T("Phiên · bấm để mở"));
 
     public AgentsPage(PanelWindow host) : base(host)
     {
         if (!AgentMonitor.Available)
         {
-            Add(Ui.Group(Title, Ui.Note("Chưa thấy Claude Code trên máy này (thư mục %USERPROFILE%\\.claude\\projects). Codex, Copilot hay OpenCode cũng chưa có log để đọc.")));
+            Add(Ui.Group(Title, Ui.Note(L.T("Chưa thấy Claude Code trên máy này (thư mục %USERPROFILE%\\.claude\\projects). Codex, Copilot hay OpenCode cũng chưa có log để đọc."))));
             return;
         }
         Add(Ui.Group(Title, Readout.Strip(_today, _week, _running), _chart)
-                .Hint("Đọc từ log Claude Code trên máy, không gửi dữ liệu đi đâu. Log không ghi giới hạn gói hay thời điểm reset, nên mục đó không có. Token gồm vào, ra, ghi cache và đọc cache."),
+                .Hint(L.T("Đọc từ log Claude Code trên máy, không gửi dữ liệu đi đâu. Log không ghi giới hạn gói hay thời điểm reset, nên mục đó không có. Token gồm vào, ra, ghi cache và đọc cache.")),
             _models,
             _sessions,
-            Ui.Group("Thông báo",
-                Ui.Row(null, "Báo khi Claude xong việc", "Dynamic Island báo khi một phiên chạy hơn 1 phút rồi xong lượt.", Ui.Switch(Store.S.AgentAlerts, on => { Store.S.AgentAlerts = on; Store.SaveSoon(); })),
-                Ui.Row(null, "Hiện trên Island khi đang chạy", "Viên Island hiện biểu tượng ✳ và số phiên đang làm việc.", Ui.Switch(Store.S.AgentOnIsland, on => { Store.S.AgentOnIsland = on; Store.SaveSoon(); AgentMonitor.Nudge(); }))));
+            Ui.Group(L.T("Thông báo"),
+                Ui.Row(null, L.T("Báo khi Claude xong việc"), L.T("Dynamic Island báo khi một phiên chạy hơn 1 phút rồi xong lượt."), Ui.Switch(Store.S.AgentAlerts, on => { Store.S.AgentAlerts = on; Store.SaveSoon(); })),
+                Ui.Row(null, L.T("Hiện trên Island khi đang chạy"), L.T("Viên Island hiện biểu tượng ✳ và số phiên đang làm việc."), Ui.Switch(Store.S.AgentOnIsland, on => { Store.S.AgentOnIsland = on; Store.SaveSoon(); AgentMonitor.Nudge(); }))));
         WhileShown(() => AgentMonitor.Updated += Draw, () => AgentMonitor.Updated -= Draw);
     }
 
@@ -54,27 +54,27 @@ internal sealed class AgentsPage : Page
         DrawChart();
 
         _models.Set(today.Count == 0
-            ? new UIElement[] { Ui.Note("Hôm nay chưa dùng.") }
+            ? new UIElement[] { Ui.Note(L.T("Hôm nay chưa dùng.")) }
             : today.Select(model => (UIElement)Ui.Row(null, model.Model,
-                $"vào {AgentMonitor.Tokens(model.Input)} · ra {AgentMonitor.Tokens(model.Output)} · ghi cache {AgentMonitor.Tokens(model.CacheWrite)} · đọc cache {AgentMonitor.Tokens(model.CacheRead)}",
+                L.F($"vào {AgentMonitor.Tokens(model.Input)} · ra {AgentMonitor.Tokens(model.Output)} · ghi cache {AgentMonitor.Tokens(model.CacheWrite)} · đọc cache {AgentMonitor.Tokens(model.CacheRead)}"),
                 Ui.Value(AgentMonitor.Tokens(model.Total), m.Text))).ToArray());
 
         _sessions.Set(sessions.Count == 0
-            ? new UIElement[] { Ui.Note("Không có phiên nào trong 12 giờ qua.") }
+            ? new UIElement[] { Ui.Note(L.T("Không có phiên nào trong 12 giờ qua.")) }
             : sessions.Take(12).Select(session =>
             {
                 var dot = new Ellipse { Width = 7, Height = 7, Fill = session.Working ? m.Accent : m.Track };
-                var where = string.Join(" · ", new[] { session.Machine.Length > 0 ? "Máy " + session.Machine : "", session.Project }.Where(x => x.Length > 0));
+                var where = string.Join(" · ", new[] { session.Machine.Length > 0 ? L.T("Máy ") + session.Machine : "", session.Project }.Where(x => x.Length > 0));
                 // A click opens the session where it lives, as the Island's rows do.
                 var row = Ui.LeadRow(dot, session.Title, (where.Length > 0 ? where + "\n" : "") + AgentOpen.Describe(session), Ui.Value(AgentMonitor.Tokens(session.Tokens)), () =>
                 {
                     if (AgentOpen.Open(session))
                         Host.HidePanel();
                     else
-                        Host.Toast($"Không mở được app {AgentMonitor.Name(session.Provider)}");
+                        Host.Toast(L.F($"Không mở được app {AgentMonitor.Name(session.Provider)}"));
                 });
                 // What it is doing right now stays in view: it is the reason to look at this list.
-                return (UIElement)row.Detail(session.NeedsInput ? "Đang chờ bạn" : session.Working ? (session.Activity.Length > 0 ? session.Activity : "Đang chạy") : $"Xong {Ago(session.LastActive)}",
+                return (UIElement)row.Detail(session.NeedsInput ? L.T("Đang chờ bạn") : session.Working ? (session.Activity.Length > 0 ? session.Activity : L.T("Đang chạy")) : $"Xong {Ago(session.LastActive)}",
                     session.NeedsInput ? m.Amber : null);
             }).ToArray());
     }
@@ -102,7 +102,7 @@ internal sealed class AgentsPage : Page
                 ToolTip = $"{day:dd/MM}: {AgentMonitor.Tokens(tokens)} token",
             };
             column.Children.Add(bar);
-            var label = Ui.Mono(day == DateTime.Today ? "Nay" : $"{day:dd}", 10, day == DateTime.Today ? Ui.M.Text : Ui.M.Secondary);
+            var label = Ui.Mono(day == DateTime.Today ? L.T("Nay") : $"{day:dd}", 10, day == DateTime.Today ? Ui.M.Text : Ui.M.Secondary);
             label.HorizontalAlignment = HorizontalAlignment.Center;
             Grid.SetRow(label, 1);
             column.Children.Add(label);
@@ -114,6 +114,6 @@ internal sealed class AgentsPage : Page
     private static string Ago(DateTime when)
     {
         var span = DateTime.Now - when;
-        return span.TotalMinutes < 1 ? "vừa xong" : span.TotalHours < 1 ? $"{(int)span.TotalMinutes} phút trước" : $"{(int)span.TotalHours} giờ trước";
+        return span.TotalMinutes < 1 ? L.T("vừa xong") : span.TotalHours < 1 ? L.F($"{(int)span.TotalMinutes} phút trước") : L.F($"{(int)span.TotalHours} giờ trước");
     }
 }

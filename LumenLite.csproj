@@ -25,6 +25,7 @@
     <Resource Include="Assets\logo.png" />
     <Resource Include="Assets\LumenLite.ico" />
     <EmbeddedResource Include="Assets\LumenLite.ico" LogicalName="LumenLite.ico" />
+    <EmbeddedResource Include="Assets\en.tsv" LogicalName="en.tsv" />
   </ItemGroup>
 
   <!-- Only published releases update themselves: release.ps1 passes -p:UpdateRepository=owner/name. -->

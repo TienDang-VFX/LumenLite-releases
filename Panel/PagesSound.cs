@@ -22,13 +22,13 @@ internal sealed class SoundPage : Page
     public SoundPage(PanelWindow host) : base(host)
     {
         _apps = Ui.Group(Title);
-        _outputs = Ui.Group("Đầu ra");
-        _mic = Ui.Group("Micro").Trailing(Ui.Keys("Ctrl+Alt+M: tắt/bật"));
+        _outputs = Ui.Group(L.T("Đầu ra"));
+        _mic = Ui.Group(L.T("Micro")).Trailing(Ui.Keys(L.T("Ctrl+Alt+M: tắt/bật")));
         Add(_apps, _outputs, _mic);
         _timer.Tick += (_, _) => Refresh();
     }
 
-    public override string Title => "Trộn âm lượng";
+    public override string Title => L.T("Trộn âm lượng");
 
     public override void Shown()
     {
@@ -66,7 +66,7 @@ internal sealed class SoundPage : Page
             _appsSignature = signature;
             _rows.Clear();
             _apps.Set(apps.Count == 0
-                ? new UIElement[] { Ui.Note("Chưa có app nào phát âm thanh.") }
+                ? new UIElement[] { Ui.Note(L.T("Chưa có app nào phát âm thanh.")) }
                 : apps.Select(AppRow).ToArray());
         }
         foreach (var app in apps)
@@ -74,7 +74,7 @@ internal sealed class SoundPage : Page
             if (!_rows.TryGetValue(app.Pid, out var row) || row.Fader.IsDragging)
                 continue;
             row.Fader.Value = app.Level;
-            row.Fader.Label = app.Muted ? "Tắt" : null;
+            row.Fader.Label = app.Muted ? L.T("Tắt") : null;
             row.Mute.Text = MuteGlyph(app.Muted);
         }
     }
@@ -84,7 +84,7 @@ internal sealed class SoundPage : Page
     private UIElement AppRow(AppVolume app)
     {
         var m = Ui.M;
-        var name = "Âm thanh hệ thống";
+        var name = L.T("Âm thanh hệ thống");
         BitmapSource? icon = null;
         if (!app.IsSystem)
         {
@@ -99,11 +99,11 @@ internal sealed class SoundPage : Page
         if (!app.IsSystem && AudioPolicy.Available)
         {
             var pinned = AudioPolicy.GetOutput(app.Pid);
-            var current = pinned == null ? "Mặc định" : _outputList.FirstOrDefault(o => o.Id == pinned)?.Name ?? "Mặc định";
-            var choices = new List<(string, Action)> { ("Mặc định (theo Windows)", () => SetAppOutput(app.Pid, null)) };
+            var current = pinned == null ? L.T("Mặc định") : _outputList.FirstOrDefault(o => o.Id == pinned)?.Name ?? L.T("Mặc định");
+            var choices = new List<(string, Action)> { (L.T("Mặc định (theo Windows)"), () => SetAppOutput(app.Pid, null)) };
             choices.AddRange(_outputList.Select(o => (o.Name, (Action)(() => SetAppOutput(app.Pid, o.Id)))));
             output = Ui.Choice(current, choices, 150);
-            hint = "Đổi đầu ra của một app có hiệu lực khi app phát lại (nhiều app cần tạm dừng rồi phát tiếp).";
+            hint = L.T("Đổi đầu ra của một app có hiệu lực khi app phát lại (nhiều app cần tạm dừng rồi phát tiếp).");
         }
 
         var pid = app.Pid;
@@ -115,7 +115,7 @@ internal sealed class SoundPage : Page
             muted = !muted;
             Audio.SetAppMute(pid, muted);
             muteGlyph.Text = MuteGlyph(muted);
-            fader.Label = muted ? "Tắt" : null;
+            fader.Label = muted ? L.T("Tắt") : null;
         }, new Thickness(8, 4, 4, 4));
         _rows[app.Pid] = (fader, muteGlyph);
 
@@ -126,7 +126,7 @@ internal sealed class SoundPage : Page
     private void SetAppOutput(int pid, string? deviceId)
     {
         if (!AudioPolicy.SetOutput(pid, deviceId))
-            Host.Toast("Windows không cho đổi đầu ra của app này.");
+            Host.Toast(L.T("Windows không cho đổi đầu ra của app này."));
         _appsSignature = "";
         Refresh();
     }
@@ -150,12 +150,12 @@ internal sealed class SoundPage : Page
                 Refresh();
             }).Current(selected));
         }
-        rows.Add(Ui.Row("\uE7F6", "Giảm âm lượng khi rút tai nghe", "Hạ về 25% để loa ngoài không phát quá to", Ui.Switch(Store.S.LowerOnUnplug, on =>
+        rows.Add(Ui.Row("\uE7F6", L.T("Giảm âm lượng khi rút tai nghe"), L.T("Hạ về 25% để loa ngoài không phát quá to"), Ui.Switch(Store.S.LowerOnUnplug, on =>
         {
             Store.S.LowerOnUnplug = on;
             Store.SaveSoon();
         })));
-        rows.Add(Ui.Row("\uE765", "Chuyển nhanh", control: Ui.Keys("Ctrl+Alt+O")));
+        rows.Add(Ui.Row("\uE765", L.T("Chuyển nhanh"), control: Ui.Keys("Ctrl+Alt+O")));
         _outputs.Set(rows.ToArray());
     }
 
@@ -169,12 +169,12 @@ internal sealed class SoundPage : Page
             _micSignature = signature;
             if (inputs.Count == 0)
             {
-                _mic.Set(Ui.Note("Không có micro nào đang cắm."));
+                _mic.Set(Ui.Note(L.T("Không có micro nào đang cắm.")));
                 _micFader = null;
                 return;
             }
-            var preferredName = Store.S.PreferredMic is { } p ? inputs.FirstOrDefault(i => i.Id == p)?.Name ?? "(đang rút)" : "Không";
-            var choices = new List<(string, Action)> { ("Không ưu tiên (theo Windows)", () => SetPreferred(null)) };
+            var preferredName = Store.S.PreferredMic is { } p ? inputs.FirstOrDefault(i => i.Id == p)?.Name ?? L.T("(đang rút)") : L.T("Không");
+            var choices = new List<(string, Action)> { (L.T("Không ưu tiên (theo Windows)"), () => SetPreferred(null)) };
             choices.AddRange(inputs.Select(i => (i.Name, (Action)(() => SetPreferred(i.Id)))));
 
             _micMute = Ui.Glyph("\uE720", 15);
@@ -185,11 +185,11 @@ internal sealed class SoundPage : Page
                 RefreshMicLevel();
             }, new Thickness(5, 4, 9, 4));
             mute.Margin = new Thickness(-5, 0, 0, 0);
-            mute.ToolTip = Ui.Tip("Tắt/bật micro");
+            mute.ToolTip = Ui.Tip(L.T("Tắt/bật micro"));
             _micFader = Ui.Slider(0, Audio.SetMicVolume);
             _mic.Set(
-                Ui.Row(null, "Micro ưu tiên", "Tự dùng micro này mỗi khi nó được cắm", Ui.Choice(preferredName, choices, 170)),
-                Ui.Row(null, "Đang dùng", control: Ui.Value(inputs.FirstOrDefault(i => i.Id == current)?.Name ?? "—")),
+                Ui.Row(null, L.T("Micro ưu tiên"), L.T("Tự dùng micro này mỗi khi nó được cắm"), Ui.Choice(preferredName, choices, 170)),
+                Ui.Row(null, L.T("Đang dùng"), control: Ui.Value(inputs.FirstOrDefault(i => i.Id == current)?.Name ?? "—")),
                 Ui.Line(mute, _micFader));
         }
         RefreshMicLevel();
@@ -200,7 +200,7 @@ internal sealed class SoundPage : Page
         if (_micFader == null || Audio.MicVolume() is not { } mic)
             return;
         _micFader.Value = mic.Level;
-        _micFader.Label = mic.Muted ? "Tắt" : null;
+        _micFader.Label = mic.Muted ? L.T("Tắt") : null;
         _micMute!.Text = mic.Muted ? "\uEC54" : "\uE720";
         _micMute.Foreground = mic.Muted ? Ui.M.Red : Ui.M.Text;
     }
@@ -229,8 +229,8 @@ internal sealed class DevicesPage : Page
     public DevicesPage(PanelWindow host) : base(host)
     {
         _uniKey = Ui.Group(Title);
-        _displays = Ui.Group("Màn hình");
-        _brightness = Ui.Group("Độ sáng");
+        _displays = Ui.Group(L.T("Màn hình"));
+        _brightness = Ui.Group(L.T("Độ sáng"));
         Add(_uniKey, _displays, _brightness);
         _timer.Tick += (_, _) =>
         {
@@ -241,7 +241,7 @@ internal sealed class DevicesPage : Page
                    () => Microsoft.Win32.SystemEvents.DisplaySettingsChanged -= OnDisplaysChanged);
     }
 
-    public override string Title => "Thiết bị";
+    public override string Title => L.T("Thiết bị");
 
     private void OnDisplaysChanged(object? sender, EventArgs e) => Dispatcher.BeginInvoke(() =>
     {
@@ -294,13 +294,13 @@ internal sealed class DevicesPage : Page
         var mode = running ? vietnamese ?? _lastMode : null;
         if (!running)
         {
-            _uniKey.Set(Ui.Row("\uE765", "UniKey chưa chạy", "Mở UniKey để đổi kiểu gõ ở đây.", Ui.Switch(false, _ => RefreshUniKey())));
+            _uniKey.Set(Ui.Row("\uE765", L.T("UniKey chưa chạy"), L.T("Mở UniKey để đổi kiểu gõ ở đây."), Ui.Switch(false, _ => RefreshUniKey())));
             return;
         }
-        var title = mode switch { true => "UniKey: Tiếng Việt", false => "UniKey: English", null => "Kiểu gõ UniKey" };
+        var title = mode switch { true => L.T("UniKey: Tiếng Việt"), false => "UniKey: English", null => L.T("Kiểu gõ UniKey") };
         var description = mode == null
-            ? "Biểu tượng UniKey đang ở khay ẩn; bấm để đổi, LumenLite sẽ biết kiểu mới."
-            : "Bật là gõ tiếng Việt, tắt là gõ English. Giống bấm biểu tượng UniKey.";
+            ? L.T("Biểu tượng UniKey đang ở khay ẩn; bấm để đổi, LumenLite sẽ biết kiểu mới.")
+            : L.T("Bật là gõ tiếng Việt, tắt là gõ English. Giống bấm biểu tượng UniKey.");
         _uniKey.Set(Ui.Row("\uE765", title, description, Ui.Switch(mode == true, _ => Toggle())));
     }
 
@@ -350,14 +350,14 @@ internal sealed class DevicesPage : Page
         var active = targets.Count(t => t.Active);
         foreach (var (target, label) in Numbered(targets, t => t.Name))
         {
-            var state = !target.Active ? "Đang tắt" : target.Primary ? "Màn hình chính" : "Đang bật";
+            var state = !target.Active ? L.T("Đang tắt") : target.Primary ? L.T("Màn hình chính") : L.T("Đang bật");
             var last = target.Active && active == 1;
-            rows.Add(Ui.Row("\uE7F4", label, last ? state + " · không thể tắt màn hình cuối cùng" : null,
+            rows.Add(Ui.Row("\uE7F4", label, last ? state + L.T(" · không thể tắt màn hình cuối cùng") : null,
                 Ui.Trail(Ui.Value(state), Ui.Switch(target.Active, on => SetDisplay(target, on)))).Disabled(last));
         }
         if (targets.Count == 0)
-            rows.Add(Ui.Note("Không tìm thấy màn hình."));
-        rows.Add(Ui.Row("\uE713", "Cài đặt màn hình của Windows", control: Ui.Nav(), onClick: () =>
+            rows.Add(Ui.Note(L.T("Không tìm thấy màn hình.")));
+        rows.Add(Ui.Row("\uE713", L.T("Cài đặt màn hình của Windows"), control: Ui.Nav(), onClick: () =>
         {
             Host.HidePanel();
             CommandBar.Launch("ms-settings:display");
@@ -400,7 +400,7 @@ internal sealed class DevicesPage : Page
             _displayBusy = false;
         }
         if (error != 0)
-            Host.Toast($"Windows không {(on ? "bật" : "tắt")} được {target.Name} (mã {error}). Thử trong Cài đặt màn hình.");
+            Host.Toast(L.F($"Windows không {(on ? L.T("bật") : L.T("tắt"))} được {target.Name} (mã {error}). Thử trong Cài đặt màn hình."));
         _displaySignature = "";
         RefreshDisplays();
     }
@@ -411,7 +411,7 @@ internal sealed class DevicesPage : Page
     {
         if (_brightnessFaders.Any(s => s.IsDragging)) return;
         _brightnessFaders.Clear();
-        _brightness.Set(Ui.Note("Đang hỏi màn hình…"));
+        _brightness.Set(Ui.Note(L.T("Đang hỏi màn hình…")));
         Brightness.Read(monitors => Dispatcher.BeginInvoke(() => ShowBrightness(monitors)));
     }
 
@@ -420,7 +420,7 @@ internal sealed class DevicesPage : Page
         _brightnessFaders.Clear();
         if (monitors.Count == 0)
         {
-            _brightness.Set(Ui.Note("Không màn hình nào nhận lệnh độ sáng. Bật DDC/CI trong menu của màn hình rời; màn hình laptop chưa hỗ trợ."));
+            _brightness.Set(Ui.Note(L.T("Không màn hình nào nhận lệnh độ sáng. Bật DDC/CI trong menu của màn hình rời; màn hình laptop chưa hỗ trợ.")));
             return;
         }
         var rows = new List<UIElement>();

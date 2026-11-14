@@ -26,7 +26,7 @@ internal static class AppInfo
             }
             catch
             {
-                return ($"Tiến trình {pid}", null);
+                return (L.F($"Tiến trình {pid}"), null);
             }
         }
         return Cache.GetOrAdd(path, p =>

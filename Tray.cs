@@ -18,7 +18,7 @@ internal sealed class Tray : IDisposable
         _widgets = widgets;
         var menu = new WinForms.ContextMenuStrip();
 
-        var open = new WinForms.ToolStripMenuItem("Mở bảng điều khiển  (" + (background.PanelHotkey ?? "chuột trái") + ")") { Font = new Font(WinForms.Control.DefaultFont, FontStyle.Bold) };
+        var open = new WinForms.ToolStripMenuItem(L.T("Mở bảng điều khiển  (") + (background.PanelHotkey ?? L.T("chuột trái")) + ")") { Font = new Font(WinForms.Control.DefaultFont, FontStyle.Bold) };
         open.Click += (_, _) => openPanel();
         menu.Items.Add(open);
         menu.Items.Add(new WinForms.ToolStripSeparator());
@@ -41,7 +41,7 @@ internal sealed class Tray : IDisposable
         };
         menu.Items.Add(islandItem);
 
-        var islandIdle = new WinForms.ToolStripMenuItem("Island luôn hiện viên nhỏ") { CheckOnClick = true, Checked = Store.S.IslandAlwaysShow };
+        var islandIdle = new WinForms.ToolStripMenuItem(L.T("Island luôn hiện viên nhỏ")) { CheckOnClick = true, Checked = Store.S.IslandAlwaysShow };
         islandIdle.Click += (_, _) =>
         {
             island.AlwaysShow = islandIdle.Checked;
@@ -50,7 +50,7 @@ internal sealed class Tray : IDisposable
         };
         menu.Items.Add(islandIdle);
 
-        var cleanLinks = new WinForms.ToolStripMenuItem("Bỏ mã theo dõi khỏi link khi copy") { CheckOnClick = true, Checked = Store.S.CleanLinks };
+        var cleanLinks = new WinForms.ToolStripMenuItem(L.T("Bỏ mã theo dõi khỏi link khi copy")) { CheckOnClick = true, Checked = Store.S.CleanLinks };
         cleanLinks.Click += (_, _) =>
         {
             Store.S.CleanLinks = cleanLinks.Checked;
@@ -58,7 +58,7 @@ internal sealed class Tray : IDisposable
         };
         menu.Items.Add(cleanLinks);
 
-        var downloads = new WinForms.ToolStripMenuItem("Báo khi tải xong file") { CheckOnClick = true, Checked = Store.S.DownloadAlerts };
+        var downloads = new WinForms.ToolStripMenuItem(L.T("Báo khi tải xong file")) { CheckOnClick = true, Checked = Store.S.DownloadAlerts };
         downloads.Click += (_, _) =>
         {
             background.DownloadAlerts = downloads.Checked;
@@ -67,18 +67,18 @@ internal sealed class Tray : IDisposable
         };
         menu.Items.Add(downloads);
 
-        var keys = new WinForms.ToolStripMenuItem("Phím tắt") { };
-        keys.DropDownItems.Add(new WinForms.ToolStripMenuItem("Tắt/bật micro: " + (background.MicHotkey ?? "bị app khác chiếm")) { Enabled = false });
-        keys.DropDownItems.Add(new WinForms.ToolStripMenuItem("Đổi đầu ra âm thanh: " + (background.OutputHotkey ?? "bị app khác chiếm")) { Enabled = false });
+        var keys = new WinForms.ToolStripMenuItem(L.T("Phím tắt")) { };
+        keys.DropDownItems.Add(new WinForms.ToolStripMenuItem(L.T("Tắt/bật micro: ") + (background.MicHotkey ?? L.T("bị app khác chiếm"))) { Enabled = false });
+        keys.DropDownItems.Add(new WinForms.ToolStripMenuItem(L.T("Đổi đầu ra âm thanh: ") + (background.OutputHotkey ?? L.T("bị app khác chiếm"))) { Enabled = false });
         menu.Items.Add(keys);
 
         menu.Items.Add(new WinForms.ToolStripSeparator());
 
-        var front = new WinForms.ToolStripMenuItem("Đưa tất cả lên trên");
+        var front = new WinForms.ToolStripMenuItem(L.T("Đưa tất cả lên trên"));
         front.Click += (_, _) => BringToFront();
         menu.Items.Add(front);
 
-        var edit = new WinForms.ToolStripMenuItem("Chỉnh sửa bố cục") { CheckOnClick = true };
+        var edit = new WinForms.ToolStripMenuItem(L.T("Chỉnh sửa bố cục")) { CheckOnClick = true };
         edit.Click += (_, _) =>
         {
             WidgetWindow.SetEditing(edit.Checked);
@@ -88,7 +88,7 @@ internal sealed class Tray : IDisposable
         menu.Opening += (_, _) => edit.Checked = WidgetWindow.Editing;
         menu.Items.Add(edit);
 
-        var autostart = new WinForms.ToolStripMenuItem("Khởi động cùng Windows") { CheckOnClick = true };
+        var autostart = new WinForms.ToolStripMenuItem(L.T("Khởi động cùng Windows")) { CheckOnClick = true };
         autostart.Click += (_, _) =>
         {
             try
@@ -104,7 +104,7 @@ internal sealed class Tray : IDisposable
         menu.Items.Add(autostart);
 
         menu.Items.Add(new WinForms.ToolStripSeparator());
-        var exit = new WinForms.ToolStripMenuItem("Thoát");
+        var exit = new WinForms.ToolStripMenuItem(L.T("Thoát"));
         exit.Click += (_, _) => quit();
         menu.Items.Add(exit);
 

@@ -19,9 +19,11 @@ internal sealed class Scratchpad : Window
     private readonly StackPanel _tabs = new() { Orientation = Orientation.Horizontal };
     private readonly TextBox _editor;
     private readonly FlowDocumentScrollViewer _preview = new() { VerticalScrollBarVisibility = ScrollBarVisibility.Auto, Visibility = Visibility.Collapsed, IsToolBarVisible = false };
-    private readonly TextBlock _previewLabel = Ui.Text("Xem trước", 12, false, Ui.M.Secondary);
+    private readonly TextBlock _previewLabel = Ui.Text(L.T("Xem trước"), 12, false, Ui.M.Secondary);
     private readonly TextBlock _pinGlyph = Ui.Glyph("", 13, Ui.M.Secondary);
     private int _active;
+    private ScratchPad? _activePad;
+    private readonly Border _history;
     private bool _loading;
     private bool _discarded;
 
@@ -52,7 +54,7 @@ internal sealed class Scratchpad : Window
         WindowStartupLocation = WindowStartupLocation.CenterScreen;
         OnGlass = Backdrop.Apply(this, Palette.Current.IsDark, resizeBorder: 6);
         if (Store.S.Pads.Count == 0)
-            Store.S.Pads.Add(new ScratchPad { Title = "Ghi chú 1", Text = "# Scratchpad\n\nGõ **Markdown** ở đây: `- danh sách`, `## tiêu đề`, `[link](https://…)`.\nTự lưu khi bạn gõ.\n" });
+            Store.S.Pads.Add(new ScratchPad { Title = L.T("Ghi chú 1"), Text = L.T("# Scratchpad\n\nGõ **Markdown** ở đây: `- danh sách`, `## tiêu đề`, `[link](https://…)`.\nTự lưu khi bạn gõ.\n") });
 
         _editor = new TextBox
         {
@@ -74,6 +76,14 @@ internal sealed class Scratchpad : Window
             if (_loading) return;
             Store.S.Pads[_active].Text = _editor.Text;
             Store.SaveSoon();
+            StickyNotes.RaiseEdited(Store.S.Pads[_active], this);
+        };
+        StickyNotes.Edited += OnStickyEdited;
+        NotesSync.ListChanged += OnNotesListChanged;
+        Closed += (_, _) =>
+        {
+            StickyNotes.Edited -= OnStickyEdited;
+            NotesSync.ListChanged -= OnNotesListChanged;
         };
 
         var header = new Grid { Margin = new Thickness(12, 10, 10, 6), Background = Brushes.Transparent };
@@ -83,12 +93,21 @@ internal sealed class Scratchpad : Window
         var actions = new StackPanel { Orientation = Orientation.Horizontal };
         actions.Children.Add(Ui.M.Pressable(Ui.Glyph("", 13), AddPad, new Thickness(8, 5, 8, 5)));
         actions.Children.Add(Ui.M.Pressable(_previewLabel, TogglePreview, new Thickness(8, 5, 8, 5)));
+        var toDesktop = Ui.M.Pressable(Ui.Glyph("", 13), () => StickyNotes.Show(Store.S.Pads[_active], null), new Thickness(8, 5, 8, 5));
+        toDesktop.ToolTip = L.T("Dán ghi chú này lên màn hình (hoặc kéo tab ra ngoài cửa sổ)");
+        actions.Children.Add(toDesktop);
+        _history = Ui.M.Pressable(Ui.Glyph("", 13), () =>
+        {
+            if (NotesSync.HistoryUrl(Store.S.Pads[_active]) is { } url) CommandBar.Launch(url);
+        }, new Thickness(8, 5, 8, 5));
+        _history.ToolTip = L.T("Lịch sử ghi chú này trên GitHub");
+        actions.Children.Add(_history);
         var pin = Ui.M.Pressable(_pinGlyph, () =>
         {
             Topmost = !Topmost;
             _pinGlyph.Foreground = Topmost ? Ui.M.Accent : Ui.M.Secondary;
         }, new Thickness(8, 5, 8, 5));
-        pin.ToolTip = "Ghim nổi trên các cửa sổ khác";
+        pin.ToolTip = L.T("Ghim nổi trên các cửa sổ khác");
         actions.Children.Add(pin);
         actions.Children.Add(Ui.M.Pressable(Ui.Glyph("", 11, Ui.M.Secondary), Hide, new Thickness(8, 5, 8, 5)));
         Grid.SetColumn(actions, 1);
@@ -140,10 +159,48 @@ internal sealed class Scratchpad : Window
             _editor.Focus();
     }
 
+    /// <summary>Opens the Scratchpad on the given note.</summary>
+    public void Open(ScratchPad pad)
+    {
+        var index = Store.S.Pads.IndexOf(pad);
+        if (index >= 0)
+            Select(index);
+        Open();
+    }
+
+    private void OnStickyEdited(ScratchPad pad, object sender)
+    {
+        if (sender == this || Store.S.Pads.IndexOf(pad) != _active || _editor.Text == pad.Text)
+            return;
+        _loading = true;
+        var caret = _editor.CaretIndex;
+        _editor.Text = pad.Text;
+        _editor.CaretIndex = Math.Min(caret, _editor.Text.Length);
+        _loading = false;
+        if (_preview.Visibility == Visibility.Visible)
+            _preview.Document = Markdown(_editor.Text);
+    }
+
+    private void OnNotesListChanged()
+    {
+        if (Store.S.Pads.Count == 0)
+            Store.S.Pads.Add(new ScratchPad { Title = L.F($"Ghi chú {1}") });
+        var index = _activePad == null ? -1 : Store.S.Pads.IndexOf(_activePad);
+        if (index < 0)
+            Select(Math.Min(_active, Store.S.Pads.Count - 1));
+        else
+        {
+            _active = index;
+            DrawTabs();
+        }
+    }
+
     private void AddPad()
     {
-        Store.S.Pads.Add(new ScratchPad { Title = $"Ghi chú {Store.S.Pads.Count + 1}" });
+        Store.S.Pads.Add(new ScratchPad { Title = L.F($"Ghi chú {Store.S.Pads.Count + 1}") });
+        NotesSync.EnsureIds();
         Store.SaveSoon();
+        NotesSync.Soon();
         Select(Store.S.Pads.Count - 1);
         _editor.Focus();
     }
@@ -151,6 +208,8 @@ internal sealed class Scratchpad : Window
     private void Select(int index)
     {
         _active = Math.Clamp(index, 0, Store.S.Pads.Count - 1);
+        _activePad = Store.S.Pads[_active];
+        _history.Visibility = NotesSync.Active ? Visibility.Visible : Visibility.Collapsed;
         _loading = true;
         _editor.Text = Store.S.Pads[_active].Text;
         _loading = false;
@@ -179,12 +238,13 @@ internal sealed class Scratchpad : Window
             }
             var tab = Ui.M.Pressable(row, () => Select(index), new Thickness(10, 5, 10, 5), Ui.M.ControlRadius, selected ? Ui.M.Inset : null);
             tab.Margin = new Thickness(0, 0, 4, 0);
-            tab.ToolTip = "Bấm đúp để đổi tên";
+            tab.ToolTip = L.T("Bấm đúp để đổi tên");
             tab.MouseLeftButtonDown += (_, e) =>
             {
                 if (e.ClickCount == 2)
                     Rename(index, tab);
             };
+            DragOut(tab, pad);
             _tabs.Children.Add(tab);
         }
     }
@@ -207,6 +267,7 @@ internal sealed class Scratchpad : Window
             if (name.Length > 0)
                 Store.S.Pads[index].Title = name;
             Store.SaveSoon();
+            StickyNotes.RaiseEdited(Store.S.Pads[index], this);
             DrawTabs();
         }
         box.KeyDown += (_, e) =>
@@ -222,11 +283,59 @@ internal sealed class Scratchpad : Window
     private void ClosePad(int index)
     {
         var pad = Store.S.Pads[index];
-        if (pad.Text.Trim().Length > 0 && MessageBox.Show(this, $"Xóa ghi chú \"{pad.Title}\"?", "Scratchpad", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+        if (pad.Text.Trim().Length > 0 && MessageBox.Show(this, L.F($"Xóa ghi chú \"{pad.Title}\"?"), "Scratchpad", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
             return;
+        StickyNotes.Remove(pad);
+        NotesSync.Forget(pad);
         Store.S.Pads.RemoveAt(index);
         Store.SaveSoon();
         Select(Math.Min(_active, Store.S.Pads.Count - 1));
+    }
+
+    /// <summary>
+    /// Dragging a tab out of the window and letting go puts that note on the desktop as a sticky note, where the
+    /// mouse was released.
+    /// </summary>
+    private void DragOut(Border tab, ScratchPad pad)
+    {
+        Point? pressed = null;
+        var dragging = false;
+        tab.PreviewMouseLeftButtonDown += (_, e) =>
+        {
+            pressed = e.GetPosition(this);
+            dragging = false;
+        };
+        tab.PreviewMouseMove += (_, e) =>
+        {
+            if (pressed is not { } start || e.LeftButton != MouseButtonState.Pressed)
+            {
+                pressed = null;
+                return;
+            }
+            var now = e.GetPosition(this);
+            if (!dragging && (Math.Abs(now.X - start.X) > 12 || Math.Abs(now.Y - start.Y) > 12))
+            {
+                dragging = true;
+                tab.CaptureMouse();
+                tab.Cursor = Cursors.SizeAll;
+            }
+        };
+        tab.PreviewMouseLeftButtonUp += (_, e) =>
+        {
+            var wasDragging = dragging;
+            pressed = null;
+            dragging = false;
+            tab.Cursor = null;
+            if (!wasDragging)
+                return;
+            tab.ReleaseMouseCapture();
+            e.Handled = true;
+            var inside = e.GetPosition(this);
+            if (inside.X >= 0 && inside.Y >= 0 && inside.X <= ActualWidth && inside.Y <= ActualHeight)
+                return;
+            // The drop point in screen units: the window's own place plus where the mouse is relative to it.
+            StickyNotes.Show(pad, new Point(Left + inside.X, Top + inside.Y));
+        };
     }
 
     private void TogglePreview()
@@ -234,7 +343,7 @@ internal sealed class Scratchpad : Window
         var show = _preview.Visibility != Visibility.Visible;
         _preview.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
         _editor.Visibility = show ? Visibility.Collapsed : Visibility.Visible;
-        _previewLabel.Text = show ? "Sửa" : "Xem trước";
+        _previewLabel.Text = show ? L.T("Sửa") : L.T("Xem trước");
         _previewLabel.Foreground = show ? Ui.M.Accent : Ui.M.Secondary;
         if (show)
             _preview.Document = Markdown(_editor.Text);

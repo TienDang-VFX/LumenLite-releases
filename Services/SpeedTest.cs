@@ -19,7 +19,7 @@ internal static class SpeedTest
 
     public static async Task<SpeedResult> RunAsync(IProgress<string> progress, CancellationToken cancel)
     {
-        progress.Report("Đang đo độ trễ…");
+        progress.Report(L.T("Đang đo độ trễ…"));
         var pings = new double[5];
         for (var i = 0; i < pings.Length; i++)
         {
@@ -30,16 +30,16 @@ internal static class SpeedTest
         Array.Sort(pings);
         var ping = pings[pings.Length / 2];
 
-        progress.Report("Đang đo tốc độ tải xuống…");
+        progress.Report(L.T("Đang đo tốc độ tải xuống…"));
         var download = await DownloadAsync(25_000_000, cancel);
         if (download < 40)
         {
             // Fast lines finish 25 MB too quickly to measure well; a larger file evens it out.
-            progress.Report("Đang đo tốc độ tải xuống…");
+            progress.Report(L.T("Đang đo tốc độ tải xuống…"));
             download = Math.Max(download, await DownloadAsync(100_000_000, cancel));
         }
 
-        progress.Report("Đang đo tốc độ tải lên…");
+        progress.Report(L.T("Đang đo tốc độ tải lên…"));
         var upload = await UploadAsync(10_000_000, cancel);
         return new SpeedResult(ping, download, upload);
     }
